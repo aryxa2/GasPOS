@@ -1,8 +1,5 @@
-<%-- 
-    Document   : bills
-    Created on : 4 Jun 2026, 23.15.06
-    Author     : Arya Satriawansyah
---%>
+<%@page import="java.util.List"%>
+<%@page import="com.gaspos.model.Transaksi"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -18,7 +15,10 @@
         .btn-cyber:hover { opacity: 0.9; color: white; }
     </style>
 </head>
-<body>
+<%
+    String roleAkses = (String) session.getAttribute("userRole");
+    boolean isKasir = "Kasir".equals(roleAkses);
+%>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 sidebar fixed-top" style="width: 16.66%;">
@@ -26,11 +26,16 @@
             <div class="text-muted small fw-bold mb-3">MENU</div>
             <ul class="nav flex-column gap-2">
                 <li class="nav-item"><a href="pos" class="nav-link text-dark fw-bold">Daftar Menu</a></li>
+                <% if (!isKasir) { %>
                 <li class="nav-item"><a href="produk" class="nav-link text-dark fw-bold">Daftar Produk</a></li>
-                <li class="nav-item"><a href="bills.jsp" class="nav-link text-dark fw-bold active">Bills</a></li>
-                <li class="nav-item"><a href="settlement.jsp" class="nav-link text-dark fw-bold">Settlement</a></li>
-                <li class="nav-item"><a href="report.jsp" class="nav-link text-dark fw-bold">Report</a></li>
-                <li class="nav-item mt-2"><a href="setting.jsp" class="nav-link text-danger fw-bold">Setting</a></li>
+                <li class="nav-item"><a href="bills" class="nav-link text-dark fw-bold active">Bills</a></li>
+                <% } %>
+                <li class="nav-item"><a href="settlement" class="nav-link text-dark fw-bold">Settlement</a></li>
+                <% if (!isKasir) { %>
+                <li class="nav-item"><a href="report" class="nav-link text-dark fw-bold">Report</a></li>
+                <li class="nav-item mt-2"><a href="setting" class="nav-link text-danger fw-bold">Setting</a></li>
+                <% } %>
+                <li class="nav-item"><a href="logout" class="nav-link text-secondary fw-bold"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
             </ul>
         </div>
         <div class="col-md-10 p-4 offset-md-2">
@@ -41,7 +46,7 @@
                     <thead class="table-light text-muted">
                         <tr>
                             <th>INVOICE</th>
-                            <th>ID PESANAN</th>
+                            <th>KASIR / METODE</th>
                             <th>WAKTU TRANSAKSI</th>
                             <th>NAMA PELANGGAN</th>
                             <th>ITEM TERJUAL</th>
@@ -49,22 +54,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><a href="#" class="text-decoration-none fw-bold" style="color: #00dbde;">INV-20260604-2-1</a></td>
-                            <td>#2 (No: 1)</td>
-                            <td>21.31 WIB</td>
-                            <td>jsda</td>
-                            <td>1x Buku Panduan PKKMB</td>
-                            <td class="fw-bold text-success">Rp 35.000</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#" class="text-decoration-none fw-bold" style="color: #00dbde;">INV-20260601-1-1</a></td>
-                            <td>#1 (No: 1)</td>
-                            <td>00.11 WIB</td>
-                            <td>arya test</td>
-                            <td>2x Nametag PKKMB</td>
-                            <td class="fw-bold text-success">Rp 30.000</td>
-                        </tr>
+                        <% 
+                            List<Transaksi> listTrans = (List<Transaksi>) request.getAttribute("listTransaksi");
+                            if (listTrans != null && !listTrans.isEmpty()) {
+                                for (Transaksi t : listTrans) {
+                                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yyyy HH:mm");
+                                    String dateStr = t.getTanggal() != null ? sdf.format(t.getTanggal()) : "-";
+                        %>
+                                    <tr>
+                                        <td><a href="#" class="text-decoration-none fw-bold" style="color: #00dbde;"><%= t.getNoInvoice() %></a></td>
+                                        <td><%= t.getKasir() %> (<%= t.getMetodePembayaran() %>)</td>
+                                        <td><%= dateStr %> WIB</td>
+                                        <td><%= t.getPelanggan() %></td>
+                                        <td><%= t.getItemsSold() %></td>
+                                        <td class="fw-bold text-success">Rp <%= String.format("%,.0f", t.getTotalBayar()).replace(",", ".") %></td>
+                                    </tr>
+                        <% 
+                                }
+                            } else {
+                        %>
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-4">Belum ada transaksi hari ini</td>
+                                </tr>
+                        <% 
+                            }
+                        %>
                     </tbody>
                 </table>
             </div>

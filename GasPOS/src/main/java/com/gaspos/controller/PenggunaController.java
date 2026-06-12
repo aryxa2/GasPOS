@@ -22,11 +22,18 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Arya Satriawansyah
  */
+import javax.servlet.http.HttpSession;
+
 @WebServlet(name = "PenggunaController", urlPatterns = {"/setting"})
 public class PenggunaController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || !"Admin".equals(session.getAttribute("userRole"))) {
+            response.sendRedirect("pos");
+            return;
+        }
         List<Pengguna> listUser = new ArrayList<>();
         try (Connection conn = Database.getConnection()) {
             String sql = "SELECT * FROM pengguna";
@@ -44,6 +51,11 @@ public class PenggunaController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || !"Admin".equals(session.getAttribute("userRole"))) {
+            response.sendRedirect("pos");
+            return;
+        }
         String aksi = request.getParameter("aksi");
 
         try (Connection conn = Database.getConnection()) {

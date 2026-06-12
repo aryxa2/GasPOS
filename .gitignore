@@ -1,0 +1,8 @@
+GasPOS/target/
+**/target/
+.idea/
+*.class
+*.war
+.nb-confidence/
+*.xml
+*.properties

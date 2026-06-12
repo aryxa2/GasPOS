@@ -29,6 +29,15 @@
     <div class="col-md-5 login-card text-center">
         <h3 class="fw-bold mb-3">GasPOS</h3>
         <p class="text-muted mb-4">Selamat datang. Silakan login untuk operasional.</p>
+        <%
+            String loginError = (String) session.getAttribute("loginError");
+            if (loginError != null) {
+                session.removeAttribute("loginError");
+        %>
+            <div class="alert alert-danger text-start small mb-3">
+                <strong>Error:</strong> <%= loginError %>
+            </div>
+        <% } %>
         <form action="login" method="POST">
             <div class="mb-3 text-start">
                 <label class="fw-bold">Username</label>

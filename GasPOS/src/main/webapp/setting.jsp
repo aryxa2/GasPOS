@@ -35,11 +35,16 @@
             <div class="text-muted small fw-bold mb-3">MENU</div>
             <ul class="nav flex-column gap-2">
                 <li class="nav-item"><a href="pos" class="nav-link text-dark fw-bold">Daftar Menu</a></li>
+                <% if (isAdmin) { %>
                 <li class="nav-item"><a href="produk" class="nav-link text-dark fw-bold">Daftar Produk</a></li>
-                <li class="nav-item"><a href="bills.jsp" class="nav-link text-dark fw-bold">Bills</a></li>
-                <li class="nav-item"><a href="settlement.jsp" class="nav-link text-dark fw-bold">Settlement</a></li>
-                <li class="nav-item"><a href="report.jsp" class="nav-link text-dark fw-bold">Report</a></li>
+                <li class="nav-item"><a href="bills" class="nav-link text-dark fw-bold">Bills</a></li>
+                <% } %>
+                <li class="nav-item"><a href="settlement" class="nav-link text-dark fw-bold">Settlement</a></li>
+                <% if (isAdmin) { %>
+                <li class="nav-item"><a href="report" class="nav-link text-dark fw-bold">Report</a></li>
                 <li class="nav-item mt-2"><a href="setting" class="nav-link text-danger fw-bold active">Setting</a></li>
+                <% } %>
+                <li class="nav-item"><a href="logout" class="nav-link text-secondary fw-bold"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
             </ul>
         </div>
         <div class="col-md-10 p-4 offset-md-2">

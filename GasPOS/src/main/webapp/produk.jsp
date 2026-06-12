@@ -26,7 +26,10 @@
         .action-btn.delete { color: #dc3545; background: #fff5f5; border-color: #ffcdd2;}
     </style>
 </head>
-<body>
+<%
+    String roleAkses = (String) session.getAttribute("userRole");
+    boolean isKasir = "Kasir".equals(roleAkses);
+%>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 sidebar fixed-top" style="width: 16.66%;">
@@ -34,11 +37,16 @@
             <div class="text-muted small fw-bold mb-3">MENU</div>
             <ul class="nav flex-column gap-2">
                 <li class="nav-item"><a href="pos" class="nav-link text-dark fw-bold">Daftar Menu</a></li>
+                <% if (!isKasir) { %>
                 <li class="nav-item"><a href="produk" class="nav-link text-dark fw-bold active">Daftar Produk</a></li>
-                <li class="nav-item"><a href="bills.jsp" class="nav-link text-dark fw-bold">Bills</a></li>
-                <li class="nav-item"><a href="settlement.jsp" class="nav-link text-dark fw-bold">Settlement</a></li>
-                <li class="nav-item"><a href="report.jsp" class="nav-link text-dark fw-bold">Report</a></li>
-                <li class="nav-item mt-2"><a href="setting.jsp" class="nav-link text-danger fw-bold">Setting</a></li>
+                <li class="nav-item"><a href="bills" class="nav-link text-dark fw-bold">Bills</a></li>
+                <% } %>
+                <li class="nav-item"><a href="settlement" class="nav-link text-dark fw-bold">Settlement</a></li>
+                <% if (!isKasir) { %>
+                <li class="nav-item"><a href="report" class="nav-link text-dark fw-bold">Report</a></li>
+                <li class="nav-item mt-2"><a href="setting" class="nav-link text-danger fw-bold">Setting</a></li>
+                <% } %>
+                <li class="nav-item"><a href="logout" class="nav-link text-secondary fw-bold"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
             </ul>
         </div>
         
@@ -83,11 +91,7 @@
                                 <td><span class="badge-aktif">Aktif</span></td>
                                 <td>
                                     <button type="button" class="action-btn edit" onclick="editProduk('<%= p.getIdProduk() %>', '<%= p.getNamaProduk() %>', '<%= p.getKategori() %>', '<%= img %>', <%= p.getStok() %>, <%= p.getHargaModal() %>, <%= p.getHargaJual() %>)"><i class="fas fa-pen text-muted"></i></button>
-                                    <form action="produk" method="POST" style="display:inline;">
-                                        <input type="hidden" name="aksi" value="hapus">
-                                        <input type="hidden" name="id_produk" value="<%= p.getIdProduk() %>">
-                                        <button type="submit" class="action-btn delete"><i class="fas fa-trash"></i></button>
-                                    </form>
+                                    <button type="button" class="action-btn delete" onclick="confirmDelete('<%= p.getIdProduk() %>', '<%= p.getNamaProduk() %>')"><i class="fas fa-trash"></i></button>
                                 </td>
                             </tr>
                             <% } } %>
@@ -192,6 +196,38 @@
         document.getElementById('inputJual').value = jual;
         document.getElementById('btnSimpan').innerHTML = '<i class="fas fa-save me-2"></i> Update Produk';
     }
+
+    function confirmDelete(id, nama) {
+        document.getElementById('deleteProductId').value = id;
+        document.getElementById('deleteProductName').innerText = nama;
+        var myModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+        myModal.show();
+    }
 </script>
+
+<!-- Modal Konfirmasi Hapus Produk -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="confirmDeleteModalLabel">Konfirmasi Hapus Produk</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Apakah Anda yakin ingin menghapus produk <span id="deleteProductName" class="fw-bold"></span> dari sistem?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light border fw-bold" data-bs-dismiss="modal">Batal</button>
+        <form action="produk" method="POST" style="display:inline;">
+            <input type="hidden" name="aksi" value="hapus">
+            <input type="hidden" name="id_produk" id="deleteProductId">
+            <button type="submit" class="btn btn-danger fw-bold">Hapus</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

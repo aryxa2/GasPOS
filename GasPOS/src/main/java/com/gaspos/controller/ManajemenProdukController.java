@@ -22,11 +22,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javax.servlet.http.HttpSession;
+
 @WebServlet(name = "ManajemenProdukController", urlPatterns = {"/produk"})
 public class ManajemenProdukController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || !"Admin".equals(session.getAttribute("userRole"))) {
+            response.sendRedirect("pos");
+            return;
+        }
         List<Produk> daftarProduk = new ArrayList<>();
         try (Connection conn = Database.getConnection()) {
             String sql = "SELECT * FROM produk";
@@ -44,6 +51,11 @@ public class ManajemenProdukController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        if (session == null || !"Admin".equals(session.getAttribute("userRole"))) {
+            response.sendRedirect("pos");
+            return;
+        }
         String aksi = request.getParameter("aksi");
         String idProduk = request.getParameter("id_produk");
         String namaProduk = request.getParameter("nama_produk");

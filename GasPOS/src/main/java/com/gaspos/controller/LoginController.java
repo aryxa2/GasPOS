@@ -41,10 +41,15 @@ public class LoginController extends HttpServlet {
                 session.setAttribute("namaUser", rs.getString("nama"));
                 response.sendRedirect("pos");
             } else {
+                HttpSession session = request.getSession();
+                session.setAttribute("loginError", "Username atau password salah!");
                 response.sendRedirect("index.jsp");
             }
         } catch (Exception e) {
             e.printStackTrace();
+            HttpSession session = request.getSession();
+            session.setAttribute("loginError", "Koneksi Database Gagal: " + e.toString());
+            response.sendRedirect("index.jsp");
         }
     }
 }

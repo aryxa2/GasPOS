@@ -1,8 +1,6 @@
-<%-- 
-    Document   : report
-    Created on : 4 Jun 2026, 23.34.14
-    Author     : Arya Satriawansyah
---%>
+<%@page import="java.util.List"%>
+<%@page import="com.gaspos.model.Transaksi"%>
+<%@page import="com.gaspos.model.MenuTerjual"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -17,9 +15,58 @@
         .btn-cyber { background: linear-gradient(135deg, #00dbde 0%, #fc00ff 100%); color: white; border: none; font-weight: bold;}
         .btn-cyber:hover { opacity: 0.9; color: white; }
         .text-cyber { background: -webkit-linear-gradient(135deg, #00dbde 0%, #fc00ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        @media print {
+            .sidebar, form, .btn {
+                display: none !important;
+            }
+            .col-md-10 {
+                width: 100% !important;
+                margin-left: 0 !important;
+                padding: 0 !important;
+            }
+            .offset-md-2 {
+                margin-left: 0 !important;
+            }
+            body {
+                background-color: #fff !important;
+                font-size: 12px;
+            }
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+            }
+        }
     </style>
 </head>
 <body>
+<%
+    String range = (String) request.getAttribute("range");
+    if (range == null) range = "semua";
+    
+    Integer totalTx = (Integer) request.getAttribute("totalTx");
+    if (totalTx == null) totalTx = 0;
+    
+    Integer totalQty = (Integer) request.getAttribute("totalQty");
+    if (totalQty == null) totalQty = 0;
+    
+    Double totalHpp = (Double) request.getAttribute("totalHpp");
+    if (totalHpp == null) totalHpp = 0.0;
+    
+    Double totalRevenue = (Double) request.getAttribute("totalRevenue");
+    if (totalRevenue == null) totalRevenue = 0.0;
+    
+    Double laba = (Double) request.getAttribute("laba");
+    if (laba == null) laba = 0.0;
+    
+    List<Transaksi> listTrans = (List<Transaksi>) request.getAttribute("listTransaksi");
+    List<MenuTerjual> listMenu = (List<MenuTerjual>) request.getAttribute("listMenuTerjual");
+    
+    java.text.NumberFormat nf = java.text.NumberFormat.getNumberInstance(java.util.Locale.US);
+    
+    String roleAkses = (String) session.getAttribute("userRole");
+    boolean isKasir = "Kasir".equals(roleAkses);
+%>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 sidebar fixed-top" style="width: 16.66%;">
@@ -27,65 +74,69 @@
             <div class="text-muted small fw-bold mb-3">MENU</div>
             <ul class="nav flex-column gap-2">
                 <li class="nav-item"><a href="pos" class="nav-link text-dark fw-bold">Daftar Menu</a></li>
+                <% if (!isKasir) { %>
                 <li class="nav-item"><a href="produk" class="nav-link text-dark fw-bold">Daftar Produk</a></li>
-                <li class="nav-item"><a href="bills.jsp" class="nav-link text-dark fw-bold">Bills</a></li>
-                <li class="nav-item"><a href="settlement.jsp" class="nav-link text-dark fw-bold">Settlement</a></li>
-                <li class="nav-item"><a href="report.jsp" class="nav-link text-dark fw-bold active">Report</a></li>
-                <li class="nav-item mt-2"><a href="setting.jsp" class="nav-link text-danger fw-bold">Setting</a></li>
+                <li class="nav-item"><a href="bills" class="nav-link text-dark fw-bold">Bills</a></li>
+                <% } %>
+                <li class="nav-item"><a href="settlement" class="nav-link text-dark fw-bold">Settlement</a></li>
+                <% if (!isKasir) { %>
+                <li class="nav-item"><a href="report" class="nav-link text-dark fw-bold active">Report</a></li>
+                <li class="nav-item mt-2"><a href="setting" class="nav-link text-danger fw-bold">Setting</a></li>
+                <% } %>
+                <li class="nav-item"><a href="logout" class="nav-link text-secondary fw-bold"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
             </ul>
         </div>
         <div class="col-md-10 p-4 offset-md-2">
             <h3 class="fw-bold mb-4">Laporan Penjualan Detail</h3>
-            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="d-flex gap-4">
+            
+            <form action="report" method="GET" class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <div class="d-flex gap-3 align-items-center flex-wrap">
                         <div>
-                            <div class="text-muted small fw-bold">Dari Tanggal</div>
-                            <div class="fw-bold mt-1">Semua</div>
-                        </div>
-                        <div>
-                            <div class="text-muted small fw-bold">Sampai Tanggal</div>
-                            <div class="fw-bold mt-1">04/06/2026</div>
-                        </div>
-                        <div class="align-self-end">
-                            <button class="btn btn-cyber px-4">Filter Laporan</button>
+                            <label class="form-label text-muted small fw-bold mb-1">Pilih Periode Laporan</label>
+                            <select name="range" class="form-select fw-bold border-2" style="min-width: 250px;" onchange="this.form.submit()">
+                                <option value="semua" <%= "semua".equals(range) ? "selected" : "" %>>Semua Transaksi</option>
+                                <option value="1" <%= "1".equals(range) ? "selected" : "" %>>Hari Ini (1 Hari Terakhir)</option>
+                                <option value="3" <%= "3".equals(range) ? "selected" : "" %>>3 Hari Terakhir</option>
+                                <option value="7" <%= "7".equals(range) ? "selected" : "" %>>7 Hari Terakhir</option>
+                            </select>
                         </div>
                     </div>
                     <div class="d-flex gap-2">
-                        <button class="btn btn-light border fw-bold"><i class="fas fa-download me-2"></i> Download PDF</button>
-                        <button class="btn btn-light border fw-bold"><i class="fas fa-print me-2"></i> Cetak</button>
+                        <button type="button" class="btn btn-light border fw-bold" onclick="window.print()"><i class="fas fa-print me-2"></i> Cetak Laporan</button>
                     </div>
                 </div>
-            </div>
+            </form>
+
             <div class="row g-3 mb-4">
                 <div class="col-md">
                     <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
                         <h6 class="text-muted fw-bold mb-3">TOTAL TRANSAKSI</h6>
-                        <h3 class="text-cyber fw-bold mb-0">2</h3>
+                        <h3 class="text-cyber fw-bold mb-0"><%= totalTx %></h3>
                     </div>
                 </div>
                 <div class="col-md">
                     <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
                         <h6 class="text-muted fw-bold mb-3">PRODUK TERJUAL</h6>
-                        <h3 class="fw-bold mb-0">3</h3>
+                        <h3 class="fw-bold mb-0"><%= totalQty %></h3>
                     </div>
                 </div>
                 <div class="col-md">
                     <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
                         <h6 class="text-muted fw-bold mb-3">TOTAL MODAL (HPP)</h6>
-                        <h3 class="text-warning fw-bold mb-0">Rp 40.000</h3>
+                        <h3 class="text-warning fw-bold mb-0">Rp <%= nf.format(totalHpp).replace(",", ".") %></h3>
                     </div>
                 </div>
                 <div class="col-md">
                     <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
                         <h6 class="text-muted fw-bold mb-3">TOTAL PENJUALAN</h6>
-                        <h3 class="fw-bold mb-0">Rp 65.000</h3>
+                        <h3 class="fw-bold mb-0">Rp <%= nf.format(totalRevenue).replace(",", ".") %></h3>
                     </div>
                 </div>
                 <div class="col-md">
                     <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
                         <h6 class="text-muted fw-bold mb-3">LABA</h6>
-                        <h3 class="text-success fw-bold mb-0">Rp 25.000</h3>
+                        <h3 class="text-success fw-bold mb-0">Rp <%= nf.format(laba).replace(",", ".") %></h3>
                     </div>
                 </div>
             </div>
@@ -96,25 +147,35 @@
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light text-muted">
                                 <tr>
-                                    <th>ID PESANAN</th>
+                                    <th>INVOICE</th>
                                     <th>WAKTU</th>
                                     <th>KASIR</th>
                                     <th>TOTAL BAYAR</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="fw-bold">INV-20260604-2-1</td>
-                                    <td>4/6/2026, 21.31.41</td>
-                                    <td>Arya Satriawansyah</td>
-                                    <td class="fw-bold">Rp 35.000</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold">INV-20260601-1-1</td>
-                                    <td>2/6/2026, 00.11.57</td>
-                                    <td>Ngawi</td>
-                                    <td class="fw-bold">Rp 30.000</td>
-                                </tr>
+                                <% 
+                                    if (listTrans != null && !listTrans.isEmpty()) {
+                                        for (Transaksi t : listTrans) {
+                                            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
+                                            String dateStr = t.getTanggal() != null ? sdf.format(t.getTanggal()) : "-";
+                                %>
+                                            <tr>
+                                                <td class="fw-bold"><%= t.getNoInvoice() %></td>
+                                                <td><%= dateStr %> WIB</td>
+                                                <td><%= t.getKasir() %></td>
+                                                <td class="fw-bold text-success">Rp <%= nf.format(t.getTotalBayar()).replace(",", ".") %></td>
+                                            </tr>
+                                <% 
+                                        }
+                                    } else {
+                                %>
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted py-4">Belum ada transaksi pada periode ini</td>
+                                        </tr>
+                                <% 
+                                    }
+                                %>
                             </tbody>
                         </table>
                     </div>
@@ -131,16 +192,25 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="fw-bold">Buku Panduan PKKMB</td>
-                                    <td class="text-center">1</td>
-                                    <td class="text-end fw-bold">Rp 35.000</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold">Nametag PKKMB</td>
-                                    <td class="text-center">2</td>
-                                    <td class="text-end fw-bold">Rp 30.000</td>
-                                </tr>
+                                <% 
+                                    if (listMenu != null && !listMenu.isEmpty()) {
+                                        for (MenuTerjual m : listMenu) {
+                                %>
+                                            <tr>
+                                                <td class="fw-bold"><%= m.getNamaMenu() %></td>
+                                                <td class="text-center"><%= m.getQty() %></td>
+                                                <td class="text-end fw-bold text-success">Rp <%= nf.format(m.getTotal()).replace(",", ".") %></td>
+                                            </tr>
+                                <% 
+                                        }
+                                    } else {
+                                %>
+                                        <tr>
+                                            <td colspan="3" class="text-center text-muted py-4">Belum ada menu terjual pada periode ini</td>
+                                        </tr>
+                                <% 
+                                    }
+                                %>
                             </tbody>
                         </table>
                     </div>
