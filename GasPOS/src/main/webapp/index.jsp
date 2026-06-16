@@ -43,11 +43,11 @@
         <form action="login" method="POST">
             <div class="mb-3 text-start">
                 <label class="fw-bold">Username</label>
-                <input type="text" class="form-control p-2" name="username" value="admin" required>
+                <input type="text" class="form-control p-2" name="username" placeholder="Masukkan Username" required>
             </div>
             <div class="mb-4 text-start">
                 <label class="fw-bold">Kata Sandi</label>
-                <input type="password" class="form-control p-2" name="password" value="admin123" required>
+                <input type="password" class="form-control p-2" name="password" placeholder="Masukkan Kata Sandi" required>
             </div>
             <button type="submit" class="btn btn-cyber w-100 p-2">Masuk</button>
         </form>
