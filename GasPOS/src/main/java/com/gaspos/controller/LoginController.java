@@ -34,6 +34,7 @@ public class LoginController extends HttpServlet {
 
             if (loggedInUser != null) {
                 HttpSession session = request.getSession();
+                session.setAttribute("username", loggedInUser.getUsername());
                 session.setAttribute("userRole", loggedInUser.getRole());
                 session.setAttribute("namaUser", loggedInUser.getNama());
                 response.sendRedirect("pos");

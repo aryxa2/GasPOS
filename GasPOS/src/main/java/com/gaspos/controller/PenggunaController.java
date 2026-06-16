@@ -48,6 +48,7 @@ public class PenggunaController extends HttpServlet {
         String aksi = request.getParameter("aksi");
 
         try {
+            String loggedInUsername = (String) session.getAttribute("username");
             if ("tambah".equals(aksi)) {
                 Pengguna baru = new Pengguna(
                     request.getParameter("username"),
@@ -59,10 +60,14 @@ public class PenggunaController extends HttpServlet {
                 userDAO.addPengguna(baru);
             } else if ("ubah_status".equals(aksi)) {
                 String username = request.getParameter("username");
-                userDAO.changeStatus(username);
+                if (username != null && !username.equals(loggedInUsername)) {
+                    userDAO.changeStatus(username);
+                }
             } else if ("hapus".equals(aksi)) {
                 String username = request.getParameter("username");
-                userDAO.deletePengguna(username);
+                if (username != null && !username.equals(loggedInUsername)) {
+                    userDAO.deletePengguna(username);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

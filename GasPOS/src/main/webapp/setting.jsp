@@ -9,6 +9,7 @@
 <%
     String roleAkses = (String) session.getAttribute("userRole");
     boolean isAdmin = "Admin".equals(roleAkses);
+    String loggedInUsername = (String) session.getAttribute("username");
 %>
 <!DOCTYPE html>
 <html>
@@ -87,16 +88,20 @@
                                 <td><span class="<%= badgeStatus %>"><%= u.getStatus() %></span></td>
                                 <% if(isAdmin) { %>
                                 <td>
-                                    <form action="setting" method="POST" style="display:inline;">
-                                        <input type="hidden" name="aksi" value="ubah_status">
-                                        <input type="hidden" name="username" value="<%= u.getUsername() %>">
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary fw-bold me-1">Ubah Status</button>
-                                    </form>
-                                    <form action="setting" method="POST" style="display:inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus karyawan <%= u.getNama() %>?')">
-                                        <input type="hidden" name="aksi" value="hapus">
-                                        <input type="hidden" name="username" value="<%= u.getUsername() %>">
-                                        <button type="submit" class="btn btn-sm btn-danger text-white fw-bold">Hapus</button>
-                                    </form>
+                                    <% if (u.getUsername() != null && !u.getUsername().equals(loggedInUsername)) { %>
+                                        <form action="setting" method="POST" style="display:inline;">
+                                            <input type="hidden" name="aksi" value="ubah_status">
+                                            <input type="hidden" name="username" value="<%= u.getUsername() %>">
+                                            <button type="submit" class="btn btn-sm btn-outline-secondary fw-bold me-1">Ubah Status</button>
+                                        </form>
+                                        <form action="setting" method="POST" style="display:inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus karyawan <%= u.getNama() %>?')">
+                                            <input type="hidden" name="aksi" value="hapus">
+                                            <input type="hidden" name="username" value="<%= u.getUsername() %>">
+                                            <button type="submit" class="btn btn-sm btn-danger text-white fw-bold">Hapus</button>
+                                        </form>
+                                    <% } else { %>
+                                        <span class="text-muted small">Aktif (Anda)</span>
+                                    <% } %>
                                 </td>
                                 <% } %>
                             </tr>
