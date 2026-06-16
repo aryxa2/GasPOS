@@ -475,6 +475,7 @@
               // Reset modal steps
               document.getElementById('paymentStepSelect').classList.remove('d-none');
               document.getElementById('paymentStepSuccess').classList.add('d-none');
+              document.getElementById('btnConfirmPayment').disabled = false;
 
               // Reset inputs
               document.getElementById('inputCashReceived').value = '';
@@ -517,6 +518,10 @@
             }
 
             function prosesPembayaran() {
+              let confirmBtn = document.getElementById('btnConfirmPayment');
+              if (confirmBtn.disabled) return;
+              confirmBtn.disabled = true;
+
               let selectedMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
 
               // Generate kode invoice kasir berdasarkan waktu
@@ -575,6 +580,7 @@
                 let cashReceived = parseFloat(document.getElementById('inputCashReceived').value) || 0;
                 if (cashReceived < currentTotal) {
                   alert("Jumlah uang tunai yang diterima kurang dari total tagihan!");
+                  confirmBtn.disabled = false;
                   return;
                 }
                 let change = cashReceived - currentTotal;
@@ -631,10 +637,14 @@
                       console.log("Transaction saved successfully.");
                   } else {
                       console.error("Failed to save transaction.");
+                      alert("Gagal menyimpan transaksi!");
+                      confirmBtn.disabled = false;
                   }
               })
               .catch(function(err) {
                   console.error("Error saving transaction:", err);
+                  alert("Error koneksi saat menyimpan transaksi!");
+                  confirmBtn.disabled = false;
               });
 
               // Tampilkan langkah struk sukses
@@ -777,7 +787,7 @@
                   <div class="modal-footer">
                     <button type="button" class="btn btn-light border fw-bold px-4"
                       data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-emerald fw-bold px-4" onclick="prosesPembayaran()"><i
+                    <button type="button" id="btnConfirmPayment" class="btn btn-emerald fw-bold px-4" onclick="prosesPembayaran()"><i
                         class="fas fa-check me-2"></i>Konfirmasi Bayar</button>
                   </div>
                 </div>
