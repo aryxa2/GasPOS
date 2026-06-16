@@ -13,7 +13,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Database {
-    private static final String URL = "jdbc:mysql://localhost:3307/gaspos";
+    private static final String URL = "jdbc:mysql://localhost:3306/gaspos";
     private static final String USER = "root";
     private static final String PASS = "";
     private static boolean isInitialized = false;
@@ -54,6 +54,16 @@ public class Database {
         try (java.sql.Statement stmt = conn.createStatement()) {
             stmt.execute(createTransaksi);
             stmt.execute(createDetail);
+            try {
+                stmt.execute("ALTER TABLE produk ADD COLUMN status VARCHAR(20) NOT NULL DEFAULT 'Aktif'");
+            } catch (SQLException e) {
+                // Ignore error if column already exists
+            }
+            try {
+                stmt.execute("ALTER TABLE produk ADD COLUMN no_wa VARCHAR(50) DEFAULT NULL");
+            } catch (SQLException e) {
+                // Ignore error if column already exists
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

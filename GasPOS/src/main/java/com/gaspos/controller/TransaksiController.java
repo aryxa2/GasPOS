@@ -90,6 +90,11 @@ public class TransaksiController extends HttpServlet {
                 }
                 psDetail.executeBatch();
                 psStok.executeBatch();
+                
+                // Secara otomatis update status menjadi 'Tidak Aktif' jika stok <= 0
+                try (PreparedStatement psUpdateStatus = conn.prepareStatement("UPDATE produk SET status = 'Tidak Aktif' WHERE stok <= 0")) {
+                    psUpdateStatus.executeUpdate();
+                }
             }
             
             conn.commit();

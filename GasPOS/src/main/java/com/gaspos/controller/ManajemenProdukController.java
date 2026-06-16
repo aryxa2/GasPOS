@@ -40,7 +40,7 @@ public class ManajemenProdukController extends HttpServlet {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                daftarProduk.add(new Produk(rs.getString("id_produk"), rs.getString("nama_produk"), rs.getInt("stok"), rs.getDouble("harga_jual"), rs.getString("gambar"), rs.getString("kategori"), rs.getDouble("harga_modal")));
+                daftarProduk.add(new Produk(rs.getString("id_produk"), rs.getString("nama_produk"), rs.getInt("stok"), rs.getDouble("harga_jual"), rs.getString("gambar"), rs.getString("kategori"), rs.getDouble("harga_modal"), rs.getString("status"), rs.getString("no_wa")));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,10 +64,24 @@ public class ManajemenProdukController extends HttpServlet {
         String stokStr = request.getParameter("stok");
         String hargaModalStr = request.getParameter("harga_modal");
         String hargaJualStr = request.getParameter("harga_jual");
+        String status = request.getParameter("status");
+        if (status == null) {
+            status = "Tidak Aktif";
+        }
+        String noWa = request.getParameter("no_wa");
+        
+        try {
+            int stokVal = Integer.parseInt(stokStr);
+            if (stokVal <= 0) {
+                status = "Tidak Aktif";
+            }
+        } catch (NumberFormatException e) {
+            // Abaikan, validasi parsing dilakukan saat query
+        }
 
         try (Connection conn = Database.getConnection()) {
             if ("tambah".equals(aksi)) {
-                String sql = "INSERT INTO produk (id_produk, nama_produk, stok, harga_jual, gambar, kategori, harga_modal) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO produk (id_produk, nama_produk, stok, harga_jual, gambar, kategori, harga_modal, status, no_wa) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setString(1, idProduk);
                 ps.setString(2, namaProduk);
@@ -76,9 +90,11 @@ public class ManajemenProdukController extends HttpServlet {
                 ps.setString(5, gambar);
                 ps.setString(6, kategori);
                 ps.setDouble(7, Double.parseDouble(hargaModalStr));
+                ps.setString(8, status);
+                ps.setString(9, noWa);
                 ps.executeUpdate();
             } else if ("edit".equals(aksi)) {
-                String sql = "UPDATE produk SET nama_produk = ?, stok = ?, harga_jual = ?, gambar = ?, kategori = ?, harga_modal = ? WHERE id_produk = ?";
+                String sql = "UPDATE produk SET nama_produk = ?, stok = ?, harga_jual = ?, gambar = ?, kategori = ?, harga_modal = ?, status = ?, no_wa = ? WHERE id_produk = ?";
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setString(1, namaProduk);
                 ps.setInt(2, Integer.parseInt(stokStr));
@@ -86,7 +102,9 @@ public class ManajemenProdukController extends HttpServlet {
                 ps.setString(4, gambar);
                 ps.setString(5, kategori);
                 ps.setDouble(6, Double.parseDouble(hargaModalStr));
-                ps.setString(7, idProduk);
+                ps.setString(7, status);
+                ps.setString(8, noWa);
+                ps.setString(9, idProduk);
                 ps.executeUpdate();
             } else if ("hapus".equals(aksi)) {
                 String sql = "DELETE FROM produk WHERE id_produk = ?";

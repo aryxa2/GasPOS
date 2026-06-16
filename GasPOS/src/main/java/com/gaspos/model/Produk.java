@@ -16,8 +16,10 @@ public class Produk {
     private String gambar;
     private String kategori;
     private double hargaModal;
+    private String status;
+    private String noWa;
 
-    public Produk(String idProduk, String namaProduk, int stok, double hargaJual, String gambar, String kategori, double hargaModal) {
+    public Produk(String idProduk, String namaProduk, int stok, double hargaJual, String gambar, String kategori, double hargaModal, String status, String noWa) {
         this.idProduk = idProduk;
         this.namaProduk = namaProduk;
         this.stok = stok;
@@ -25,6 +27,8 @@ public class Produk {
         this.gambar = gambar;
         this.kategori = kategori;
         this.hargaModal = hargaModal;
+        this.status = status;
+        this.noWa = noWa;
     }
 
     public String getIdProduk() { return idProduk; }
@@ -34,4 +38,6 @@ public class Produk {
     public String getGambar() { return gambar; }
     public String getKategori() { return kategori; }
     public double getHargaModal() { return hargaModal; }
+    public String getStatus() { return status; }
+    public String getNoWa() { return noWa; }
 }

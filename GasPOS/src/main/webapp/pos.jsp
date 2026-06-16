@@ -28,23 +28,6 @@
               border-radius: 4px;
             }
 
-            .logout-btn {
-              display: flex;
-              align-items: center;
-              padding: 10px 15px;
-              color: #6c757d !important;
-              background-color: #f8f9fa;
-              border-radius: 8px;
-              text-decoration: none;
-              font-weight: bold;
-              transition: all 0.2s ease;
-            }
-
-            .logout-btn:hover {
-              background-color: #fff5f5;
-              color: #dc3545 !important;
-            }
-
             .product-card {
               border-radius: 12px;
               border: none;
@@ -357,7 +340,7 @@
                 </div>
                 <div class="mb-4">
                   <hr>
-                  <a href="logout" class="logout-btn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+                  <a href="logout" class="nav-link text-secondary fw-bold"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
                 </div>
               </div>
 
@@ -368,7 +351,7 @@
                   <% List<Produk> list = (List<Produk>) request.getAttribute("daftarProduk");
                       if(list != null) {
                       for(Produk p : list) {
-                          if (isKasir && p.getStok() <= 0) {
+                          if (!"Aktif".equals(p.getStatus())) {
                               continue;
                           }
                           String img = p.getGambar() != null && !p.getGambar().isEmpty() ? p.getGambar() :
@@ -440,16 +423,9 @@
               }
             }
 
-            let pendingRemoveId = null;
-
             function removeItem(id) {
-              let item = orderList.find(i => i.id === id);
-              if (item) {
-                pendingRemoveId = id;
-                document.getElementById('removeProductName').innerText = item.nama;
-                var myModal = new bootstrap.Modal(document.getElementById('confirmRemoveModal'));
-                myModal.show();
-              }
+              orderList = orderList.filter(i => i.id !== id);
+              renderCart();
             }
 
             function renderCart() {
@@ -677,38 +653,10 @@
               renderCart();
             }
 
-            document.addEventListener('DOMContentLoaded', function () {
-              document.getElementById('btnConfirmRemove').addEventListener('click', function () {
-                if (pendingRemoveId) {
-                  orderList = orderList.filter(i => i.id !== pendingRemoveId);
-                  renderCart();
-                  pendingRemoveId = null;
-                  bootstrap.Modal.getInstance(document.getElementById('confirmRemoveModal')).hide();
-                }
-              });
-            });
+
           </script>
 
-          <!-- Modal Konfirmasi Hapus Produk dari Order -->
-          <div class="modal fade" id="confirmRemoveModal" tabindex="-1" aria-labelledby="confirmRemoveModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title fw-bold" id="confirmRemoveModalLabel">Hapus Item Order</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  Apakah Anda yakin ingin menghapus <span id="removeProductName" class="fw-bold"></span> dari daftar
-                  belanja?
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-light border fw-bold" data-bs-dismiss="modal">Batal</button>
-                  <button type="button" class="btn btn-danger fw-bold" id="btnConfirmRemove">Hapus</button>
-                </div>
-              </div>
-            </div>
-          </div>
+
 
           <!-- Modal Pembayaran & Tagihan Berhasil -->
           <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel"

@@ -1,0 +1,184 @@
+========================================================================
+           PANDUAN CARA MENJALANKAN APLIKASI GASPOS
+========================================================================
+Dokumen ini menjelaskan langkah-langkah untuk melakukan konfigurasi
+dan menjalankan proyek web Java "GasPOS" menggunakan NetBeans IDE,
+Apache Tomcat, dan Database MySQL/MariaDB.
+
+------------------------------------------------------------------------
+A. PRASYARAT SISTEM (PREREQUISITES)
+------------------------------------------------------------------------
+Sebelum menjalankan program, pastikan perangkat Anda telah terinstal:
+1. Java Development Kit (JDK) versi 8 atau versi yang lebih baru (disarankan JDK 8/11 sesuai dengan source/target di pom.xml).
+2. NetBeans IDE (disarankan versi 12 ke atas / Apache NetBeans).
+3. Apache Tomcat Web Server (versi 9.x atau yang kompatibel dengan servlet container Java EE 6).
+4. MySQL atau MariaDB Database Server (misal melalui XAMPP, Laragon, atau instalasi standalone).
+5. phpMyAdmin, DBeaver, atau MySQL Workbench (untuk mempermudah pengelolaan database).
+6. Maven (terintegrasi di NetBeans) untuk mengunduh dependency secara otomatis.
+
+------------------------------------------------------------------------
+B. LANGKAH 1: KONFIGURASI DATABASE (MYSQL)
+------------------------------------------------------------------------
+1. Aktifkan service MySQL/MariaDB Anda (misalnya klik "Start" MySQL pada panel XAMPP).
+2. Buka phpMyAdmin atau client database lainnya dan lakukan koneksi ke server database.
+3. Buat database baru dengan nama: gaspos
+4. Eksekusi perintah SQL berikut pada database gaspos tersebut untuk membuat tabel-tabel utama dan data awal:
+
+CREATE TABLE IF NOT EXISTS pengguna (
+    username VARCHAR(50) PRIMARY KEY,
+    nama VARCHAR(100) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'Aktif'
+);
+
+CREATE TABLE IF NOT EXISTS produk (
+    id_produk VARCHAR(50) PRIMARY KEY,
+    nama_produk VARCHAR(100) NOT NULL,
+    stok INT NOT NULL DEFAULT 0,
+    harga_jual DOUBLE NOT NULL DEFAULT 0.0,
+    gambar VARCHAR(255),
+    kategori VARCHAR(50),
+    harga_modal DOUBLE NOT NULL DEFAULT 0.0,
+    status VARCHAR(20) NOT NULL DEFAULT 'Aktif',
+    no_wa VARCHAR(50) DEFAULT NULL
+);
+
+CREATE TABLE IF NOT EXISTS transaksi (
+    no_invoice VARCHAR(50) PRIMARY KEY,
+    tanggal TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    pelanggan VARCHAR(100) NOT NULL DEFAULT 'Pelanggan Umum',
+    metode_pembayaran VARCHAR(50) NOT NULL,
+    kasir VARCHAR(100) NOT NULL DEFAULT 'Kasir Utama',
+    subtotal DOUBLE NOT NULL DEFAULT 0.0,
+    total_bayar DOUBLE NOT NULL DEFAULT 0.0,
+    kembalian DOUBLE NOT NULL DEFAULT 0.0
+);
+
+CREATE TABLE IF NOT EXISTS transaksi_detail (
+    id_detail INT AUTO_INCREMENT PRIMARY KEY,
+    no_invoice VARCHAR(50) NOT NULL,
+    id_produk VARCHAR(50) NOT NULL,
+    nama_produk VARCHAR(100) NOT NULL,
+    qty INT NOT NULL,
+    harga DOUBLE NOT NULL,
+    total DOUBLE NOT NULL,
+    FOREIGN KEY (no_invoice) REFERENCES transaksi(no_invoice) ON DELETE CASCADE
+);
+
+INSERT INTO pengguna (username, nama, password_hash, role, status) VALUES 
+('admin', 'Administrator', 'admin123', 'Admin', 'Aktif'),
+('husni', 'Husni', 'husni123', 'Kasir', 'Aktif'),
+('kasir', 'Kasir Utama', 'kasir123', 'Kasir', 'Aktif')
+ON DUPLICATE KEY UPDATE username=username;
+
+INSERT INTO produk (id_produk, nama_produk, stok, harga_jual, gambar, kategori, harga_modal, status, no_wa) VALUES
+('P001', 'Headband PKKMB ', 96, 10000.0, 'https://i.ytimg.com/vi/IGsTb0nWUL0/maxresdefault.jpg', 'Peralatan', 5000.0, 'Aktif', '62812345678'),
+('P002', 'Nametag PKKMB', 97, 15000.0, 'https://imgv2-2-f.scribdassets.com/img/document/766738831/original/402245817a/1?v=1', 'Peralatan', 10000.0, 'Aktif', '62812345678'),
+('P003', 'Kain Flanel PKKMB', 98, 15000.0, 'https://thekingdomshop.com/cdn/shop/files/master-kain-flanel-45x90cm-2048x2048.jpg?v=1721968317', 'Peralatan', 10000.0, 'Aktif', '62812345678'),
+('P004', 'Topi Putih', 98, 25000.0, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5MnlmUfpt_aHXQkvTPvV4656j4EmvDgWpV8D0iylFEdy9HObbxSdsT5gg&s=10', 'Perlengkapan', 20000.0, 'Aktif', '62812345678'),
+('P005', 'Pensil B2', 20, 2000.0, 'https://filebroker-cdn.lazada.co.id/kf/S826555b0c56143718f20f7f268610ee2m.jpg', 'Peralatan Tulis dan Gambar', 1500.0, 'Aktif', '62812345678')
+ON DUPLICATE KEY UPDATE id_produk=id_produk;
+
+INSERT INTO transaksi (no_invoice, tanggal, pelanggan, metode_pembayaran, kasir, subtotal, total_bayar, kembalian) VALUES
+('S-260613-GASPOS2819', '2026-06-13 16:28:19', 'Pelanggan Umum', 'Tunai', 'Administrator', 51000.0, 51000.0, 0.0),
+('S-260613-GASPOS2845', '2026-06-13 16:28:45', 'Pelanggan Umum', 'QRIS', 'Administrator', 16000.0, 16000.0, 0.0),
+('S-260613-GASPOS3410', '2026-06-12 18:34:10', 'Pelanggan Umum', 'Tunai', 'Administrator', 56000.0, 56000.0, 0.0)
+ON DUPLICATE KEY UPDATE no_invoice=no_invoice;
+
+INSERT INTO transaksi_detail (id_detail, no_invoice, id_produk, nama_produk, qty, harga, total) VALUES
+(1, 'S-260613-GASPOS3410', 'P001', 'Headband PKKMB ', 1, 1000.0, 1000.0),
+(2, 'S-260613-GASPOS3410', 'P002', 'Nametag PKKMB', 1, 15000.0, 15000.0),
+(3, 'S-260613-GASPOS3410', 'P003', 'Kain Flanel PKKMB', 1, 15000.0, 15000.0),
+(4, 'S-260613-GASPOS3410', 'P004', 'Topi Putih', 1, 25000.0, 25000.0),
+(8, 'S-260613-GASPOS2819', 'P001', 'Headband PKKMB ', 1, 1000.0, 1000.0),
+(9, 'S-260613-GASPOS2819', 'P003', 'Kain Flanel PKKMB', 1, 15000.0, 15000.0),
+(10, 'S-260613-GASPOS2819', 'P004', 'Topi Putih', 1, 25000.0, 25000.0),
+(11, 'S-260613-GASPOS2819', '0001', 'pembantu coli', 1, 10000.0, 10000.0),
+(12, 'S-260613-GASPOS2845', 'P002', 'Nametag PKKMB', 1, 15000.0, 15000.0),
+(13, 'S-260613-GASPOS2845', 'P001', 'Headband PKKMB ', 1, 1000.0, 1000.0)
+ON DUPLICATE KEY UPDATE id_detail=id_detail;
+
+------------------------------------------------------------------------
+C. LANGKAH 2: KONFIGURASI KONEKSI DATABASE PADA KODE JAVA
+------------------------------------------------------------------------
+1. Buka proyek GasPOS di NetBeans IDE.
+2. Cari file koneksi database, yang bernama `Database.java` di dalam 
+   package `com.gaspos.config` (path: `src/main/java/com/gaspos/config/Database.java`).
+3. Sesuaikan atribut string koneksi berikut dengan credential MySQL Anda:
+   - URL: `jdbc:mysql://localhost:3306/gaspos`
+   - USER: `root` (Default user MySQL)
+   - PASS: `""` (Masukkan password database MySQL Anda jika ada, kosongkan jika default)
+
+------------------------------------------------------------------------
+D. LANGKAH 3: PENGATURAN LIBRARIES & DEPENDENCIES
+------------------------------------------------------------------------
+1. Proyek ini berbasis **Maven**, sehingga semua pustaka (libraries) dikelola 
+   otomatis melalui file `pom.xml`.
+2. Saat proyek dibuka pertama kali di NetBeans, Maven akan mengunduh dependensi berikut:
+   - `mysql-connector-java` versi `8.0.27` (Driver JDBC MySQL).
+   - `javaee-web-api` versi `6.0` (API Web Java standar).
+3. Pastikan perangkat Anda terhubung ke internet saat membuka proyek pertama kali agar
+   NetBeans dapat menyelesaikan download dependensi Maven ini secara otomatis.
+4. Jika dependensi belum terunduh, klik kanan pada nama proyek `GasPOS` -> Pilih 
+   `Clean and Build` untuk memicu proses download dan kompilasi ulang.
+
+------------------------------------------------------------------------
+E. LANGKAH 4: PROSES COMPILATION & RUNNING PROGRAM
+------------------------------------------------------------------------
+1. Sebelum menjalankan, lakukan pembersihan sisa-sisa build lama.
+   Klik kanan pada proyek `GasPOS` -> Pilih `Clean and Build`.
+2. Tunggu hingga terminal NetBeans memunculkan pesan "BUILD SUCCESS".
+3. Pastikan server Apache Tomcat sudah aktif dan terintegrasi di NetBeans 
+   (tab `Services` -> `Servers`).
+4. Klik kanan pada proyek `GasPOS` -> Pilih `Run`.
+5. NetBeans akan otomatis membuka browser default dan mengarah ke portal login:
+   `http://localhost:8080/GasPOS/` (Context path: `/GasPOS`).
+
+------------------------------------------------------------------------
+F. SKENARIO PENGUJIAN FITUR UTAMA APLIKASI
+------------------------------------------------------------------------
+1. UJI COBA PORTAL LOGIN & ROLE AKSES:
+   - Masuk ke menu login user di halaman utama.
+   - Uji coba login menggunakan 2 level otorisasi (Role) berbeda:
+     * **Admin**: Username `admin` dan password `admin123`.
+     * **Kasir**: Username `kasir` dan password `kasir123` (atau `husni` / `husni123`).
+   - PERHATIKAN DINAMISASI MENU SIDEBAR:
+     * Pengguna dengan role **Kasir** hanya dapat melihat menu: "Daftar Menu" (POS) dan "Settlement".
+     * Pengguna dengan role **Admin** memiliki akses penuh ke seluruh menu: "Daftar Menu" (POS), "Daftar Produk" (Manajemen), "Bills", "Settlement", "Report", dan "Setting".
+
+2. UJI COBA TRANSAKSI POINT OF SALE (POS):
+   - Login menggunakan akun Admin atau Kasir, lalu buka menu **Daftar Menu**.
+   - Pilih produk yang tersedia (contoh: "Headband PKKMB", "Nametag PKKMB") untuk ditambahkan ke keranjang (cart).
+   - Tentukan Nama Pelanggan pada inputan pelanggan (default: Pelanggan Umum).
+   - Pilih metode pembayaran: "Tunai" atau "QRIS".
+   - Masukkan nominal pembayaran pada field Uang Bayar. Sistem akan secara otomatis menghitung kembalian belanja secara real-time.
+   - Klik button "Submit Transaksi" untuk memproses dan mencatat transaksi ke database (tabel `transaksi` dan `transaksi_detail`), yang juga akan memotong stok produk secara otomatis.
+
+3. UJI COBA SETTLEMENT (TUTUP KASIR):
+   - Masuk ke menu **Settlement**.
+   - Halaman akan memuat rangkuman total transaksi lunas, rincian menu terjual, subtotal, dan total pendapatan per hari ini.
+   - Klik tombol **Tutup Kasir** untuk melakukan penutupan kasir.
+   - Konfirmasi dialog akan muncul. Jika Anda memilih "Ya, Tutup Kasir", sistem akan:
+     * Mengunci form transaksi baru (status berubah menjadi "Kasir Ditutup").
+     * Mengaktifkan tombol "Buka Kasir" dan menonaktifkan "Tutup Kasir".
+     * Secara otomatis memicu dialog window.print() untuk mencetak Laporan Tutup Kasir.
+     * Setelah dialog print selesai, sistem akan mengarahkan user untuk logout secara otomatis ke `/logout` demi keamanan.
+
+4. UJI COBA LAPORAN DETAIL & LABA RUGI (ADMIN DASHBOARD):
+   - Login sebagai **Admin** dan masuk ke menu **Report**.
+   - Sistem akan menampilkan analisis keuangan secara detail:
+     * Filter periode laporan berdasarkan rentang hari (Semua, Hari Ini, 3 Hari, atau 7 Hari).
+     * Rincian dashboard: Total Transaksi, Produk Terjual, Total HPP (Harga Pokok Penjualan), Total Pendapatan, dan Laba Bersih (Total Pendapatan - Total HPP).
+     * Klik tombol "Cetak Laporan" untuk memicu cetak laporan resmi dalam format cetak profesional.
+
+------------------------------------------------------------------------
+G. TROUBLESHOOTING KENDALA UMUM
+------------------------------------------------------------------------
+1. Kendala: Driver MySQL Error atau Database Connection Failed.
+   Solusi: Pastikan XAMPP/Laragon/MySQL Server Anda sudah aktif, dan cek kecocokan username/password database pada file `Database.java`.
+2. Kendala: Library/driver MySQL tidak ditemukan (ClassNotFoundException).
+   Solusi: Proyek ini menggunakan Maven. Pastikan komputer Anda tersambung internet sewaktu melakukan "Clean and Build" agar NetBeans dapat men-download library mysql-connector-java dari repositori Maven Central.
+3. Kendala: Context Path HTTP Status 404 saat program di-run.
+   Solusi: Klik kanan pada proyek -> Properties -> Kategori Run -> Pastikan opsi server Tomcat sudah terpilih dan Context Path terisi dengan nama `/GasPOS`.
+------------------------------------------------------------------------

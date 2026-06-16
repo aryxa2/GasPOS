@@ -16,7 +16,9 @@ CREATE TABLE IF NOT EXISTS produk (
     harga_jual DOUBLE NOT NULL DEFAULT 0.0,
     gambar VARCHAR(255),
     kategori VARCHAR(50),
-    harga_modal DOUBLE NOT NULL DEFAULT 0.0
+    harga_modal DOUBLE NOT NULL DEFAULT 0.0,
+    status VARCHAR(20) NOT NULL DEFAULT 'Aktif',
+    no_wa VARCHAR(50) DEFAULT NULL
 );
 
 -- Insert default users

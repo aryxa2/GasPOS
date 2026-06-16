@@ -33,7 +33,7 @@ public class ProdukController extends HttpServlet {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                daftarProduk.add(new Produk(rs.getString("id_produk"), rs.getString("nama_produk"), rs.getInt("stok"), rs.getDouble("harga_jual"), rs.getString("gambar"), rs.getString("kategori"), rs.getDouble("harga_modal")));
+                daftarProduk.add(new Produk(rs.getString("id_produk"), rs.getString("nama_produk"), rs.getInt("stok"), rs.getDouble("harga_jual"), rs.getString("gambar"), rs.getString("kategori"), rs.getDouble("harga_modal"), rs.getString("status"), rs.getString("no_wa")));
             }
         } catch (Exception e) {
             e.printStackTrace();

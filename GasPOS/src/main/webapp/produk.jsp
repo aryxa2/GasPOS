@@ -16,26 +16,12 @@
         body { background-color: #f8f9fa; }
         .sidebar { background-color: white; height: 100vh; border-right: 1px solid #eee; padding: 20px;}
         .nav-item .active { border-left: 4px solid #4f46e5; background-color: #f5f3ff; color: #4f46e5 !important; border-radius: 4px; }
-        .logout-btn {
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            color: #6c757d !important;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.2s ease;
-        }
-        .logout-btn:hover {
-            background-color: #fff5f5;
-            color: #dc3545 !important;
-        }
         .btn-cyber { background: #4f46e5; color: white; border: none; font-weight: bold; transition: background-color 0.2s ease, transform 0.1s ease; }
         .btn-cyber:hover { background: #4338ca; color: white; }
         .table th { background-color: #f8f9fa; color: #6c757d; font-weight: 600; font-size: 12px; }
         .table td { vertical-align: middle; font-weight: 500; }
         .badge-aktif { background-color: #e6f4ea; color: #1e8e3e; padding: 5px 10px; border-radius: 20px; font-size: 12px; }
+        .badge-nonaktif { background-color: #fff5f5; color: #dc3545; padding: 5px 10px; border-radius: 20px; font-size: 12px; }
         .action-btn { width: 32px; height: 32px; padding: 0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #ddd; background: white; margin: 0 2px; cursor: pointer;}
         .action-btn.edit:hover { background: #f8f9fa; color: #000; }
         .action-btn.delete { color: #dc3545; background: #fff5f5; border-color: #ffcdd2;}
@@ -67,7 +53,7 @@
             </div>
             <div class="mb-4">
                 <hr>
-                <a href="logout" class="logout-btn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+                <a href="logout" class="nav-link text-secondary fw-bold"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
             </div>
         </div>
         
@@ -109,9 +95,15 @@
                                 <td>Rp <%= java.text.NumberFormat.getNumberInstance(java.util.Locale.US).format((int) p.getHargaModal()) %></td>
                                 <td class="text-indigo fw-bold">Rp <%= java.text.NumberFormat.getNumberInstance(java.util.Locale.US).format((int) p.getHargaJual()) %></td>
                                 <td><%= p.getStok() %></td>
-                                <td><span class="badge-aktif">Aktif</span></td>
                                 <td>
-                                    <button type="button" class="action-btn edit" onclick="editProduk('<%= p.getIdProduk() %>', '<%= p.getNamaProduk() %>', '<%= p.getKategori() %>', '<%= img %>', <%= p.getStok() %>, <%= (int) p.getHargaModal() %>, <%= (int) p.getHargaJual() %>)"><i class="fas fa-pen text-muted"></i></button>
+                                    <% if ("Aktif".equals(p.getStatus())) { %>
+                                        <span class="badge-aktif">Aktif</span>
+                                    <% } else { %>
+                                        <span class="badge-nonaktif">Tidak Aktif</span>
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <button type="button" class="action-btn edit" onclick="editProduk('<%= p.getIdProduk() %>', '<%= p.getNamaProduk() %>', '<%= p.getKategori() %>', '<%= img %>', <%= p.getStok() %>, <%= (int) p.getHargaModal() %>, <%= (int) p.getHargaJual() %>, '<%= p.getStatus() %>', '<%= p.getNoWa() != null ? p.getNoWa() : "" %>')"><i class="fas fa-pen text-muted"></i></button>
                                     <button type="button" class="action-btn delete" onclick="confirmDelete('<%= p.getIdProduk() %>', '<%= p.getNamaProduk() %>')"><i class="fas fa-trash"></i></button>
                                 </td>
                             </tr>
@@ -165,12 +157,12 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">No. WA Penjual (Opsional)</label>
-                                <input type="text" class="form-control p-2" placeholder="Contoh: 62812345678">
+                                <input type="text" class="form-control p-2" name="no_wa" id="inputWa" placeholder="Contoh: 62812345678">
                             </div>
                         </div>
 
                         <div class="form-check mb-5 mt-2">
-                            <input class="form-check-input" type="checkbox" checked id="statusCheck">
+                            <input class="form-check-input" type="checkbox" name="status" value="Aktif" checked id="statusCheck">
                             <label class="form-check-label fw-bold" for="statusCheck">Status Produk Aktif</label>
                         </div>
 
@@ -196,6 +188,8 @@
         document.getElementById('formProduk').reset();
         document.getElementById('inputId').readOnly = false;
         document.getElementById('inputGambar').value = 'https://via.placeholder.com/150';
+        document.getElementById('statusCheck').checked = true;
+        document.getElementById('inputWa').value = '';
     }
 
     function hideForm() {
@@ -203,7 +197,7 @@
         document.getElementById('viewForm').style.display = 'none';
     }
 
-    function editProduk(id, nama, kategori, gambar, stok, modal, jual) {
+    function editProduk(id, nama, kategori, gambar, stok, modal, jual, status, noWa) {
         showForm();
         document.getElementById('formTitle').innerText = 'Edit Produk';
         document.getElementById('aksiForm').value = 'edit';
@@ -215,6 +209,8 @@
         document.getElementById('inputStok').value = stok;
         document.getElementById('inputModal').value = modal;
         document.getElementById('inputJual').value = jual;
+        document.getElementById('statusCheck').checked = (status === 'Aktif');
+        document.getElementById('inputWa').value = noWa || '';
         document.getElementById('btnSimpan').innerHTML = '<i class="fas fa-save me-2"></i> Update Produk';
     }
 
