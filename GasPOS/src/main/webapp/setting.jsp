@@ -19,12 +19,12 @@
     <style>
         body { background-color: #f8f9fa; }
         .sidebar { background-color: white; height: 100vh; border-right: 1px solid #eee; padding: 20px;}
-        .nav-item .active { border-left: 4px solid #dc3545; background-color: #fff5f5; color: #dc3545 !important; border-radius: 4px; }
+        .nav-item .active { border-left: 4px solid #4f46e5; background-color: #f5f3ff; color: #4f46e5 !important; border-radius: 4px; }
         .badge-aktif { background-color: #e6f4ea; color: #1e8e3e; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold;}
         .badge-nonaktif { background-color: #fff5f5; color: #dc3545; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold;}
-        .badge-role { background-color: #e8f0fe; color: #1967d2; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold;}
-        .btn-cyber { background: linear-gradient(135deg, #00dbde 0%, #fc00ff 100%); color: white; border: none; font-weight: bold;}
-        .btn-cyber:hover { opacity: 0.9; color: white; }
+        .badge-role { background-color: #f5f3ff; color: #4f46e5; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold;}
+        .btn-cyber { background: #4f46e5; color: white; border: none; font-weight: bold; transition: background-color 0.2s ease, transform 0.1s ease; }
+        .btn-cyber:hover { background: #4338ca; color: white; }
     </style>
 </head>
 <body>

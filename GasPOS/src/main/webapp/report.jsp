@@ -11,10 +11,11 @@
     <style>
         body { background-color: #f8f9fa; }
         .sidebar { background-color: white; height: 100vh; border-right: 1px solid #eee; padding: 20px;}
-        .nav-item .active { border-left: 4px solid #dc3545; background-color: #fff5f5; color: #dc3545 !important; border-radius: 4px; }
-        .btn-cyber { background: linear-gradient(135deg, #00dbde 0%, #fc00ff 100%); color: white; border: none; font-weight: bold;}
-        .btn-cyber:hover { opacity: 0.9; color: white; }
-        .text-cyber { background: -webkit-linear-gradient(135deg, #00dbde 0%, #fc00ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-item .active { border-left: 4px solid #4f46e5; background-color: #f5f3ff; color: #4f46e5 !important; border-radius: 4px; }
+        .btn-cyber { background: #4f46e5; color: white; border: none; font-weight: bold; transition: background-color 0.2s ease, transform 0.1s ease; }
+        .btn-cyber:hover { background: #4338ca; color: white; }
+        .text-cyber { color: #4f46e5 !important; }
+        .text-emerald { color: #10b981 !important; }
 
         @media print {
             .sidebar, form, .btn {
@@ -136,7 +137,7 @@
                 <div class="col-md">
                     <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
                         <h6 class="text-muted fw-bold mb-3">LABA</h6>
-                        <h3 class="text-success fw-bold mb-0">Rp <%= nf.format(laba).replace(",", ".") %></h3>
+                        <h3 class="text-emerald fw-bold mb-0">Rp <%= nf.format(laba).replace(",", ".") %></h3>
                     </div>
                 </div>
             </div>
@@ -164,7 +165,7 @@
                                                 <td class="fw-bold"><%= t.getNoInvoice() %></td>
                                                 <td><%= dateStr %> WIB</td>
                                                 <td><%= t.getKasir() %></td>
-                                                <td class="fw-bold text-success">Rp <%= nf.format(t.getTotalBayar()).replace(",", ".") %></td>
+                                                <td class="fw-bold text-emerald">Rp <%= nf.format(t.getTotalBayar()).replace(",", ".") %></td>
                                             </tr>
                                 <% 
                                         }
@@ -199,7 +200,7 @@
                                             <tr>
                                                 <td class="fw-bold"><%= m.getNamaMenu() %></td>
                                                 <td class="text-center"><%= m.getQty() %></td>
-                                                <td class="text-end fw-bold text-success">Rp <%= nf.format(m.getTotal()).replace(",", ".") %></td>
+                                                <td class="text-end fw-bold text-emerald">Rp <%= nf.format(m.getTotal()).replace(",", ".") %></td>
                                             </tr>
                                 <% 
                                         }

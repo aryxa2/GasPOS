@@ -1,16 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.gaspos.model;
 
 /**
  *
  * @author Arya Satriawansyah
  */
-public class Kasir extends User {
-    
-    public Kasir(String username, String nama, String passwordHash) {
+public class Admin extends User {
+
+    public Admin(String username, String nama, String passwordHash) {
         super(username, nama, passwordHash);
     }
 
@@ -21,6 +17,6 @@ public class Kasir extends User {
 
     @Override
     public String getRole() {
-        return "Kasir";
+        return "Admin";
     }
 }

@@ -15,15 +15,16 @@
     <style>
         body { background-color: #f8f9fa; }
         .sidebar { background-color: white; height: 100vh; border-right: 1px solid #eee; padding: 20px;}
-        .nav-item .active { border-left: 4px solid #dc3545; background-color: #fff5f5; color: #dc3545 !important; border-radius: 4px; }
-        .btn-cyber { background: linear-gradient(135deg, #00dbde 0%, #fc00ff 100%); color: white; border: none; font-weight: bold;}
-        .btn-cyber:hover { opacity: 0.9; color: white; }
+        .nav-item .active { border-left: 4px solid #4f46e5; background-color: #f5f3ff; color: #4f46e5 !important; border-radius: 4px; }
+        .btn-cyber { background: #4f46e5; color: white; border: none; font-weight: bold; transition: background-color 0.2s ease, transform 0.1s ease; }
+        .btn-cyber:hover { background: #4338ca; color: white; }
         .table th { background-color: #f8f9fa; color: #6c757d; font-weight: 600; font-size: 12px; }
         .table td { vertical-align: middle; font-weight: 500; }
         .badge-aktif { background-color: #e6f4ea; color: #1e8e3e; padding: 5px 10px; border-radius: 20px; font-size: 12px; }
         .action-btn { width: 32px; height: 32px; padding: 0; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #ddd; background: white; margin: 0 2px; cursor: pointer;}
         .action-btn.edit:hover { background: #f8f9fa; color: #000; }
         .action-btn.delete { color: #dc3545; background: #fff5f5; border-color: #ffcdd2;}
+        .text-indigo { color: #4f46e5 !important; }
     </style>
 </head>
 <%
@@ -85,12 +86,12 @@
                                 <td class="ps-4 text-muted"><%= p.getIdProduk() %></td>
                                 <td class="fw-bold"><%= p.getNamaProduk() %></td>
                                 <td class="text-muted"><%= p.getKategori() %></td>
-                                <td>Rp <%= p.getHargaModal() %></td>
-                                <td class="text-success">Rp <%= p.getHargaJual() %></td>
+                                <td>Rp <%= (int) p.getHargaModal() %></td>
+                                <td class="text-indigo fw-bold">Rp <%= (int) p.getHargaJual() %></td>
                                 <td><%= p.getStok() %></td>
                                 <td><span class="badge-aktif">Aktif</span></td>
                                 <td>
-                                    <button type="button" class="action-btn edit" onclick="editProduk('<%= p.getIdProduk() %>', '<%= p.getNamaProduk() %>', '<%= p.getKategori() %>', '<%= img %>', <%= p.getStok() %>, <%= p.getHargaModal() %>, <%= p.getHargaJual() %>)"><i class="fas fa-pen text-muted"></i></button>
+                                    <button type="button" class="action-btn edit" onclick="editProduk('<%= p.getIdProduk() %>', '<%= p.getNamaProduk() %>', '<%= p.getKategori() %>', '<%= img %>', <%= p.getStok() %>, <%= (int) p.getHargaModal() %>, <%= (int) p.getHargaJual() %>)"><i class="fas fa-pen text-muted"></i></button>
                                     <button type="button" class="action-btn delete" onclick="confirmDelete('<%= p.getIdProduk() %>', '<%= p.getNamaProduk() %>')"><i class="fas fa-trash"></i></button>
                                 </td>
                             </tr>
@@ -155,7 +156,7 @@
 
                         <div class="text-end border-top pt-4">
                             <button type="button" class="btn btn-light border px-4 py-2 me-2 fw-bold" onclick="hideForm()">Batal</button>
-                            <button type="submit" class="btn btn-danger px-4 py-2 fw-bold" id="btnSimpan"><i class="fas fa-save me-2"></i> Simpan Produk</button>
+                            <button type="submit" class="btn btn-cyber px-4 py-2 fw-bold" id="btnSimpan"><i class="fas fa-save me-2"></i> Simpan Produk</button>
                         </div>
                     </form>
                 </div>

@@ -18,10 +18,12 @@
             backdrop-filter: blur(10px);
         }
         .btn-cyber {
-            background: linear-gradient(135deg, #00dbde 0%, #fc00ff 100%);
+            background: #4f46e5;
             color: white; border: none; font-weight: bold;
+            transition: background-color 0.2s ease, transform 0.1s ease;
         }
-        .btn-cyber:hover { opacity: 0.9; color: white; }
+        .btn-cyber:hover { background: #4338ca; color: white; }
+        .btn-cyber:active { transform: scale(0.98); }
     </style>
 </head>
 <body>

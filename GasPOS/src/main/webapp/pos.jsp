@@ -11,7 +11,7 @@
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
           <style>
             body {
-              background-color: #f4f7f6;
+              background-color: #f8f9fa;
             }
 
             .sidebar {
@@ -22,9 +22,9 @@
             }
 
             .nav-item .active {
-              border-left: 4px solid #dc3545;
-              background-color: #fff5f5;
-              color: #dc3545 !important;
+              border-left: 4px solid #4f46e5;
+              background-color: #f5f3ff;
+              color: #4f46e5 !important;
               border-radius: 4px;
             }
 
@@ -33,32 +33,121 @@
               border: none;
               box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
               text-align: center;
-              padding: 20px;
-              transition: transform 0.2s;
+              transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+              width: 100%;
+              overflow: hidden;
+              display: flex;
+              flex-direction: column;
+              height: 100%;
+              background: white;
             }
 
             .product-card:hover {
-              transform: translateY(-5px);
+              transform: translateY(-8px);
+              box-shadow: 0 12px 20px rgba(0, 0, 0, 0.08), 0 0 15px rgba(0, 219, 222, 0.12);
             }
 
             .product-img {
               width: 100%;
-              height: 120px;
-              object-fit: contain;
-              margin-bottom: 15px;
+              aspect-ratio: 1 / 1;
+              object-fit: cover;
+              transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            }
+
+            .product-card:hover .product-img {
+              transform: scale(1.06);
+            }
+
+            .product-body {
+              padding: 15px 12px;
+              display: flex;
+              flex-direction: column;
+              flex-grow: 1;
+              justify-content: space-between;
+              align-items: center;
+              z-index: 2;
+            }
+
+            .product-info-wrap {
+              width: 100%;
+              margin-bottom: 12px;
+            }
+
+            .product-title {
+              font-weight: bold;
+              color: #212529;
+              font-size: 0.95rem;
+              line-height: 1.3;
+              margin-bottom: 4px;
+              display: -webkit-box;
+              -webkit-line-clamp: 2;
+              -webkit-box-orient: vertical;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+
+            .product-price {
+              color: #4f46e5;
+              font-weight: 700;
+              font-size: 0.95rem;
             }
 
             .btn-cyber {
-              background: linear-gradient(135deg, #00dbde 0%, #fc00ff 100%);
+              background: #4f46e5;
               color: white;
               border: none;
               border-radius: 20px;
               font-weight: bold;
+              max-width: 150px;
+              width: 100%;
+              margin: 0 auto;
+              display: block;
+              transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
             }
 
             .btn-cyber:hover {
-              opacity: 0.9;
+              transform: scale(1.05);
+              background: #4338ca;
+              box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
               color: white;
+            }
+
+            .btn-cyber:active {
+              transform: scale(0.95);
+            }
+
+            .btn-checkout {
+              background: #4f46e5;
+              color: white;
+              border: none;
+              transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            }
+
+            .btn-checkout:hover {
+              background: #4338ca;
+              box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+              color: white;
+            }
+
+            .btn-checkout:active {
+              transform: scale(0.98);
+            }
+
+            .btn-emerald {
+              background: #10b981;
+              color: white;
+              border: none;
+              transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+            }
+
+            .btn-emerald:hover {
+              background: #059669;
+              box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+              color: white;
+            }
+
+            .btn-emerald:active {
+              transform: scale(0.98);
             }
 
             .cart-card {
@@ -254,7 +343,7 @@
               <div class="col-md-7 p-4 offset-md-2">
                 <h3 class="fw-bold">Peralatan PKKMB & Kuliah</h3>
                 <p class="text-muted">Pilih perlengkapan mahasiswa baru untuk ditambahkan ke order</p>
-                <div class="row g-4 mt-2">
+                <div class="row g-2 mt-2">
                   <% List<Produk> list = (List<Produk>) request.getAttribute("daftarProduk");
                       if(list != null) {
                       for(Produk p : list) {
@@ -264,17 +353,21 @@
                           String img = p.getGambar() != null && !p.getGambar().isEmpty() ? p.getGambar() :
                           "https://via.placeholder.com/150";
                           %>
-                          <div class="col-md-4">
-                            <div class="product-card bg-white">
+                          <div class="col-md-3">
+                            <div class="product-card bg-white h-100">
                               <img src="<%= img %>" class="product-img" alt="Produk">
-                              <div class="fw-bold text-dark">
-                                <%= p.getNamaProduk() %>
+                              <div class="product-body">
+                                <div class="product-info-wrap">
+                                  <div class="product-title">
+                                    <%= p.getNamaProduk() %>
+                                  </div>
+                                  <div class="product-price">Rp <%= (int) p.getHargaJual() %>
+                                  </div>
+                                </div>
+                                <button class="btn btn-cyber"
+                                  onclick="addToCart('<%= p.getIdProduk() %>', '<%= p.getNamaProduk() %>', <%= (int) p.getHargaJual() %>)">+
+                                  ADD</button>
                               </div>
-                              <div class="text-success mb-3 fw-bold">Rp <%= p.getHargaJual() %>
-                              </div>
-                              <button class="btn btn-cyber w-100"
-                                onclick="addToCart('<%= p.getIdProduk() %>', '<%= p.getNamaProduk() %>', <%= p.getHargaJual() %>)">+
-                                ADD</button>
                             </div>
                           </div>
                       <% } } %>
@@ -299,9 +392,9 @@
                     <span>Pajak (0%)</span><span>Rp 0</span>
                   </div>
                   <div class="d-flex justify-content-between fs-4 fw-bold mb-4">
-                    <span>Total</span><span id="total-price" class="text-success">Rp 0</span>
+                    <span>Total</span><span id="total-price" style="color: #4f46e5;">Rp 0</span>
                   </div>
-                  <button class="btn btn-outline-dark w-100 p-3 fw-bold rounded-3" onclick="buatTagihan()"><i
+                  <button class="btn btn-checkout w-100 p-3 fw-bold rounded-3" onclick="buatTagihan()"><i
                       class="fas fa-credit-card me-2"></i> Buat Tagihan</button>
                 </div>
               </div>
@@ -656,7 +749,7 @@
                       </div>
                       <div class="p-3 bg-light rounded-3 d-flex justify-content-between align-items-center">
                         <span class="text-muted fw-bold">Kembalian</span>
-                        <h5 class="fw-bold text-success mb-0" id="textCashChange">Rp 0</h5>
+                        <h5 class="fw-bold text-emerald mb-0" id="textCashChange">Rp 0</h5>
                       </div>
                     </div>
 
@@ -684,21 +777,21 @@
                   <div class="modal-footer">
                     <button type="button" class="btn btn-light border fw-bold px-4"
                       data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-success fw-bold px-4" onclick="prosesPembayaran()"><i
+                    <button type="button" class="btn btn-emerald fw-bold px-4" onclick="prosesPembayaran()"><i
                         class="fas fa-check me-2"></i>Konfirmasi Bayar</button>
                   </div>
                 </div>
 
                 <!-- Step 2: Invoice / Sukses (Struk Belanja) -->
                 <div id="paymentStepSuccess" class="d-none">
-                  <div class="modal-header bg-success text-white">
+                  <div class="modal-header bg-emerald text-white">
                     <h5 class="modal-title fw-bold"><i class="fas fa-check-circle me-2"></i>Tagihan Berhasil Dibayar
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                       aria-label="Close"></button>
                   </div>
                   <div class="modal-body p-4 text-center">
-                    <div class="text-success mb-3">
+                    <div class="text-emerald mb-3">
                       <i class="fas fa-check-circle fs-1"></i>
                     </div>
                     <h4 class="fw-bold mb-1">Pembayaran Sukses!</h4>
@@ -711,7 +804,7 @@
                       </div>
                       <div class="d-flex justify-content-between mb-2">
                         <span class="text-muted">Total Pembayaran</span>
-                        <span class="fw-bold text-success" id="receiptTotal">-</span>
+                        <span class="fw-bold text-emerald" id="receiptTotal">-</span>
                       </div>
                       <div id="receiptCashRow" class="d-none">
                         <div class="d-flex justify-content-between mb-2">
@@ -728,7 +821,7 @@
                   <div class="modal-footer">
                     <button type="button" class="btn btn-light border fw-bold px-4"
                       data-bs-dismiss="modal">Tutup</button>
-                    <button type="button" class="btn btn-success fw-bold px-4" onclick="window.print()"><i
+                    <button type="button" class="btn btn-emerald fw-bold px-4" onclick="window.print()"><i
                         class="fas fa-print me-2"></i>Cetak Struk</button>
                   </div>
                 </div>

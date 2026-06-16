@@ -4,11 +4,10 @@
  */
 package com.gaspos.controller;
 
-import com.gaspos.config.Database;
+import com.gaspos.dao.UserDAO;
+import com.gaspos.dao.UserDAOImpl;
+import com.gaspos.model.User;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,22 +22,20 @@ import javax.servlet.http.HttpSession;
 @WebServlet(name = "LoginController", urlPatterns = {"/login"})
 public class LoginController extends HttpServlet {
 
+    private final UserDAO userDAO = new UserDAOImpl();
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String user = request.getParameter("username");
-        String pass = request.getParameter("password");
+        String usernameInput = request.getParameter("username");
+        String passwordInput = request.getParameter("password");
 
-        try (Connection conn = Database.getConnection()) {
-            String sql = "SELECT * FROM pengguna WHERE username = ? AND password_hash = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, user);
-            ps.setString(2, pass);
-            ResultSet rs = ps.executeQuery();
+        try {
+            User loggedInUser = userDAO.authenticate(usernameInput, passwordInput);
 
-            if (rs.next()) {
+            if (loggedInUser != null) {
                 HttpSession session = request.getSession();
-                session.setAttribute("userRole", rs.getString("role"));
-                session.setAttribute("namaUser", rs.getString("nama"));
+                session.setAttribute("userRole", loggedInUser.getRole());
+                session.setAttribute("namaUser", loggedInUser.getNama());
                 response.sendRedirect("pos");
             } else {
                 HttpSession session = request.getSession();

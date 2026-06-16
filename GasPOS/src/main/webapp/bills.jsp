@@ -10,9 +10,10 @@
     <style>
         body { background-color: #f8f9fa; }
         .sidebar { background-color: white; height: 100vh; border-right: 1px solid #eee; padding: 20px;}
-        .nav-item .active { border-left: 4px solid #dc3545; background-color: #fff5f5; color: #dc3545 !important; border-radius: 4px; }
-        .btn-cyber { background: linear-gradient(135deg, #00dbde 0%, #fc00ff 100%); color: white; border: none; font-weight: bold;}
-        .btn-cyber:hover { opacity: 0.9; color: white; }
+        .nav-item .active { border-left: 4px solid #4f46e5; background-color: #f5f3ff; color: #4f46e5 !important; border-radius: 4px; }
+        .btn-cyber { background: #4f46e5; color: white; border: none; font-weight: bold; transition: background-color 0.2s ease, transform 0.1s ease; }
+        .btn-cyber:hover { background: #4338ca; color: white; }
+        .text-emerald { color: #10b981 !important; }
     </style>
 </head>
 <%
@@ -62,12 +63,12 @@
                                     String dateStr = t.getTanggal() != null ? sdf.format(t.getTanggal()) : "-";
                         %>
                                     <tr>
-                                        <td><a href="#" class="text-decoration-none fw-bold" style="color: #00dbde;"><%= t.getNoInvoice() %></a></td>
+                                        <td><a href="#" class="text-decoration-none fw-bold" style="color: #4f46e5;"><%= t.getNoInvoice() %></a></td>
                                         <td><%= t.getKasir() %> (<%= t.getMetodePembayaran() %>)</td>
                                         <td><%= dateStr %> WIB</td>
                                         <td><%= t.getPelanggan() %></td>
                                         <td><%= t.getItemsSold() %></td>
-                                        <td class="fw-bold text-success">Rp <%= String.format("%,.0f", t.getTotalBayar()).replace(",", ".") %></td>
+                                        <td class="fw-bold text-emerald">Rp <%= String.format("%,.0f", t.getTotalBayar()).replace(",", ".") %></td>
                                     </tr>
                         <% 
                                 }

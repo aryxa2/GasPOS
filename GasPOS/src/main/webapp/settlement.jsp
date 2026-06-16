@@ -10,10 +10,14 @@
     <style>
         body { background-color: #f8f9fa; }
         .sidebar { background-color: white; height: 100vh; border-right: 1px solid #eee; padding: 20px;}
-        .nav-item .active { border-left: 4px solid #dc3545; background-color: #fff5f5; color: #dc3545 !important; border-radius: 4px; }
-        .btn-cyber { background: linear-gradient(135deg, #00dbde 0%, #fc00ff 100%); color: white; border: none; font-weight: bold;}
-        .btn-cyber:hover { opacity: 0.9; color: white; }
-        .text-cyber { background: -webkit-linear-gradient(135deg, #00dbde 0%, #fc00ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-item .active { border-left: 4px solid #4f46e5; background-color: #f5f3ff; color: #4f46e5 !important; border-radius: 4px; }
+        .btn-cyber { background: #4f46e5; color: white; border: none; font-weight: bold; transition: background-color 0.2s ease, transform 0.1s ease; }
+        .btn-cyber:hover { background: #4338ca; color: white; }
+        .text-cyber { color: #4f46e5 !important; }
+        .text-emerald { color: #10b981 !important; }
+        .bg-emerald { background-color: #10b981 !important; }
+        .btn-emerald { background: #10b981; color: white; border: none; transition: background-color 0.2s ease, transform 0.1s ease; }
+        .btn-emerald:hover { background: #059669; color: white; }
 
         /* Area Cetak Laporan Settlement (Disembunyikan pada web) */
         #settlementPrintArea {
@@ -222,7 +226,7 @@
                                             <tr>
                                                 <td class="fw-bold"><%= m.getNamaMenu() %></td>
                                                 <td class="text-center"><%= m.getQty() %></td>
-                                                <td class="text-end fw-bold text-success">Rp <%= nf.format(m.getTotal()).replace(",", ".") %></td>
+                                                <td class="text-end fw-bold text-emerald">Rp <%= nf.format(m.getTotal()).replace(",", ".") %></td>
                                             </tr>
                                 <% 
                                         }
@@ -374,18 +378,18 @@
 <div class="modal fade" id="confirmBukaModal" tabindex="-1" aria-labelledby="confirmBukaModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow">
-            <div class="modal-header bg-success text-white">
+            <div class="modal-header bg-emerald text-white">
                 <h5 class="modal-title fw-bold" id="confirmBukaModalLabel"><i class="fas fa-key me-2"></i>Buka Kasir</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-4 text-center">
-                <i class="fas fa-door-open text-success fs-1 mb-3"></i>
+                <i class="fas fa-door-open text-emerald fs-1 mb-3"></i>
                 <h5 class="fw-bold text-dark">Apakah Anda yakin ingin membuka kasir?</h5>
                 <p class="text-muted small mb-0">Kasir akan dibuka kembali untuk menerima pencatatan transaksi baru hari ini.</p>
             </div>
             <div class="modal-footer border-0 justify-content-center">
                 <button type="button" class="btn btn-light border fw-bold px-4" data-bs-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-success fw-bold px-4" onclick="executeBukaKasir()">Ya, Buka Kasir</button>
+                <button type="button" class="btn btn-emerald fw-bold px-4" onclick="executeBukaKasir()">Ya, Buka Kasir</button>
             </div>
         </div>
     </div>

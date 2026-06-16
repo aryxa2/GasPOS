@@ -19,5 +19,19 @@ public abstract class User {
         this.passwordHash = passwordHash;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public String getNama() {
+        return nama;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public abstract String getRole();
+
     public abstract boolean login(String inputUser, String inputPass);
 }
