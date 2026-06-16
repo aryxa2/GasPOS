@@ -4,7 +4,7 @@ GasPOS adalah aplikasi Kasir (Point of Sale) berbasis web yang dikembangkan meng
 
 ---
 
-## 🛠️ Prasyarat (Prerequisites)
+## Prasyarat (Prerequisites)
 
 Sebelum menjalankan aplikasi, pastikan sistem Anda telah memiliki perangkat lunak berikut:
 1. **Java Development Kit (JDK) 8** atau versi yang lebih baru.
@@ -16,7 +16,7 @@ Sebelum menjalankan aplikasi, pastikan sistem Anda telah memiliki perangkat luna
 
 ---
 
-## 📦 Langkah-Langkah Menjalankan Aplikasi
+## Langkah-Langkah Menjalankan Aplikasi
 
 ### 1. Persiapan Database MySQL
 
@@ -33,7 +33,7 @@ Sebelum menjalankan aplikasi, pastikan sistem Anda telah memiliki perangkat luna
 4. Impor seluruh tabel dan data awal dari berkas SQL yang disediakan ke database `gaspos`. Berkas SQL berada di:
    `GasPOS/database.sql`
 5. Jika port atau kredensial database Anda berbeda, sesuaikan konfigurasinya pada berkas:
-   📂 `GasPOS/src/main/java/com/gaspos/config/Database.java` pada baris berikut:
+   `GasPOS/src/main/java/com/gaspos/config/Database.java` pada baris berikut:
    ```java
    private static final String URL = "jdbc:mysql://localhost:3307/gaspos"; // Ganti 3307 dengan port database Anda (misal 3306)
    private static final String USER = "root"; // Ganti jika username database berbeda
@@ -54,7 +54,7 @@ Sebelum menjalankan aplikasi, pastikan sistem Anda telah memiliki perangkat luna
    mvn clean package
    ```
 4. Setelah build berhasil (`BUILD SUCCESS`), berkas hasil kompilasi **`GasPOS.war`** akan berada di dalam folder target:
-   📂 `GasPOS/target/GasPOS.war`
+   `GasPOS/target/GasPOS.war`
 
 ---
 
@@ -82,7 +82,7 @@ Anda dapat menjalankan aplikasi menggunakan salah satu dari dua metode di bawah 
 
 ---
 
-## 🔑 Akun Login Bawaan (Default Accounts)
+## Akun Login Bawaan (Default Accounts)
 
 Gunakan akun berikut untuk masuk ke sistem setelah aplikasi berhasil berjalan:
 
@@ -93,7 +93,7 @@ Gunakan akun berikut untuk masuk ke sistem setelah aplikasi berhasil berjalan:
 
 ---
 
-## 📂 Struktur Folder Proyek Utama
+## Struktur Folder Proyek Utama
 
 * `GasPOS/` - Folder utama proyek.
   * `database.sql` - Skema basis data awal dan data dummy pengguna/produk.
