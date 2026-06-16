@@ -60,6 +60,9 @@ public class PenggunaController extends HttpServlet {
             } else if ("ubah_status".equals(aksi)) {
                 String username = request.getParameter("username");
                 userDAO.changeStatus(username);
+            } else if ("hapus".equals(aksi)) {
+                String username = request.getParameter("username");
+                userDAO.deletePengguna(username);
             }
         } catch (Exception e) {
             e.printStackTrace();

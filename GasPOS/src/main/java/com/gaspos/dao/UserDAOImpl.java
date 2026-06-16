@@ -102,4 +102,17 @@ public class UserDAOImpl implements UserDAO {
             throw e;
         }
     }
+
+    @Override
+    public boolean deletePengguna(String username) throws Exception {
+        try (Connection conn = Database.getConnection()) {
+            String sql = "DELETE FROM pengguna WHERE username = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
 }

@@ -90,7 +90,12 @@
                                     <form action="setting" method="POST" style="display:inline;">
                                         <input type="hidden" name="aksi" value="ubah_status">
                                         <input type="hidden" name="username" value="<%= u.getUsername() %>">
-                                        <button type="submit" class="btn btn-sm btn-outline-secondary fw-bold">Ubah Status</button>
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary fw-bold me-1">Ubah Status</button>
+                                    </form>
+                                    <form action="setting" method="POST" style="display:inline;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus karyawan <%= u.getNama() %>?')">
+                                        <input type="hidden" name="aksi" value="hapus">
+                                        <input type="hidden" name="username" value="<%= u.getUsername() %>">
+                                        <button type="submit" class="btn btn-sm btn-danger text-white fw-bold">Hapus</button>
                                     </form>
                                 </td>
                                 <% } %>
