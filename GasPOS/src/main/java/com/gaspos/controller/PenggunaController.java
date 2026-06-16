@@ -50,27 +50,47 @@ public class PenggunaController extends HttpServlet {
         try {
             String loggedInUsername = (String) session.getAttribute("username");
             if ("tambah".equals(aksi)) {
-                Pengguna baru = new Pengguna(
-                    request.getParameter("username"),
-                    request.getParameter("nama"),
-                    request.getParameter("password"),
-                    request.getParameter("role"),
-                    "Aktif"
-                );
-                userDAO.addPengguna(baru);
+                String username = request.getParameter("username");
+                String nama = request.getParameter("nama");
+                String password = request.getParameter("password");
+                String role = request.getParameter("role");
+
+                if (username == null || username.trim().isEmpty() ||
+                    nama == null || nama.trim().isEmpty() ||
+                    password == null || password.trim().isEmpty()) {
+                    session.setAttribute("errorSetting", "Semua field harus diisi!");
+                } else if (userDAO.isUsernameExists(username)) {
+                    session.setAttribute("errorSetting", "Username '" + username + "' sudah terdaftar!");
+                } else {
+                    Pengguna baru = new Pengguna(username, nama, password, role, "Aktif");
+                    if (userDAO.addPengguna(baru)) {
+                        session.setAttribute("successSetting", "Karyawan baru berhasil ditambahkan!");
+                    } else {
+                        session.setAttribute("errorSetting", "Gagal menambahkan karyawan!");
+                    }
+                }
             } else if ("ubah_status".equals(aksi)) {
                 String username = request.getParameter("username");
                 if (username != null && !username.equals(loggedInUsername)) {
-                    userDAO.changeStatus(username);
+                    if (userDAO.changeStatus(username)) {
+                        session.setAttribute("successSetting", "Status karyawan berhasil diubah!");
+                    } else {
+                        session.setAttribute("errorSetting", "Gagal mengubah status karyawan!");
+                    }
                 }
             } else if ("hapus".equals(aksi)) {
                 String username = request.getParameter("username");
                 if (username != null && !username.equals(loggedInUsername)) {
-                    userDAO.deletePengguna(username);
+                    if (userDAO.deletePengguna(username)) {
+                        session.setAttribute("successSetting", "Karyawan berhasil dihapus!");
+                    } else {
+                        session.setAttribute("errorSetting", "Gagal menghapus karyawan!");
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+            session.setAttribute("errorSetting", "Terjadi kesalahan: " + e.getMessage());
         }
         response.sendRedirect("setting");
     }

@@ -10,6 +10,15 @@
     String roleAkses = (String) session.getAttribute("userRole");
     boolean isAdmin = "Admin".equals(roleAkses);
     String loggedInUsername = (String) session.getAttribute("username");
+    
+    String errorSetting = (String) session.getAttribute("errorSetting");
+    if (errorSetting != null) {
+        session.removeAttribute("errorSetting");
+    }
+    String successSetting = (String) session.getAttribute("successSetting");
+    if (successSetting != null) {
+        session.removeAttribute("successSetting");
+    }
 %>
 <!DOCTYPE html>
 <html>
@@ -54,6 +63,19 @@
             </div>
         </div>
         <div class="col-md-10 p-4 offset-md-2">
+            
+            <% if (errorSetting != null) { %>
+                <div class="alert alert-danger alert-dismissible fade show rounded-3 mb-4" role="alert">
+                    <i class="fas fa-exclamation-circle me-2"></i><strong>Gagal:</strong> <%= errorSetting %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+            <% if (successSetting != null) { %>
+                <div class="alert alert-success alert-dismissible fade show rounded-3 mb-4" role="alert">
+                    <i class="fas fa-check-circle me-2"></i><strong>Sukses:</strong> <%= successSetting %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
             
             <div id="viewList">
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -126,12 +148,12 @@
                     </div>
                 </div>
                 <div class="card border-0 shadow-sm rounded-4 p-4 mt-4">
-                    <form action="setting" method="POST">
+                    <form action="setting" method="POST" autocomplete="off">
                         <input type="hidden" name="aksi" value="tambah">
                         <div class="row g-4 mb-4">
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Nama Lengkap</label>
-                                <input type="text" class="form-control p-2" name="nama" required>
+                                <input type="text" class="form-control p-2" name="nama" required autocomplete="off">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Role Akses</label>
@@ -142,11 +164,11 @@
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Username</label>
-                                <input type="text" class="form-control p-2" name="username" required>
+                                <input type="text" class="form-control p-2" name="username" required autocomplete="off">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label fw-bold">Password</label>
-                                <input type="password" class="form-control p-2" name="password" required>
+                                <input type="password" class="form-control p-2" name="password" required autocomplete="new-password">
                             </div>
                         </div>
                         <div class="text-end border-top pt-4">
@@ -162,6 +184,7 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     function showForm() {
         document.getElementById('viewList').style.display = 'none';
