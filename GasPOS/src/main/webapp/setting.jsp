@@ -21,6 +21,21 @@
         body { background-color: #f8f9fa; }
         .sidebar { background-color: white; height: 100vh; border-right: 1px solid #eee; padding: 20px;}
         .nav-item .active { border-left: 4px solid #4f46e5; background-color: #f5f3ff; color: #4f46e5 !important; border-radius: 4px; }
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            color: #6c757d !important;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        .logout-btn:hover {
+            background-color: #fff5f5;
+            color: #dc3545 !important;
+        }
         .badge-aktif { background-color: #e6f4ea; color: #1e8e3e; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold;}
         .badge-nonaktif { background-color: #fff5f5; color: #dc3545; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold;}
         .badge-role { background-color: #f5f3ff; color: #4f46e5; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold;}
@@ -50,7 +65,7 @@
             </div>
             <div class="mb-4">
                 <hr>
-                <a href="logout" class="nav-link text-secondary fw-bold"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+                <a href="logout" class="logout-btn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
             </div>
         </div>
         <div class="col-md-10 p-4 offset-md-2">

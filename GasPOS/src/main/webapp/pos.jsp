@@ -28,6 +28,23 @@
               border-radius: 4px;
             }
 
+            .logout-btn {
+              display: flex;
+              align-items: center;
+              padding: 10px 15px;
+              color: #6c757d !important;
+              background-color: #f8f9fa;
+              border-radius: 8px;
+              text-decoration: none;
+              font-weight: bold;
+              transition: all 0.2s ease;
+            }
+
+            .logout-btn:hover {
+              background-color: #fff5f5;
+              color: #dc3545 !important;
+            }
+
             .product-card {
               border-radius: 12px;
               border: none;
@@ -340,7 +357,7 @@
                 </div>
                 <div class="mb-4">
                   <hr>
-                  <a href="logout" class="nav-link text-secondary fw-bold"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+                  <a href="logout" class="logout-btn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
                 </div>
               </div>
 

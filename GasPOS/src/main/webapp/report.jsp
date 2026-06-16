@@ -12,6 +12,21 @@
         body { background-color: #f8f9fa; }
         .sidebar { background-color: white; height: 100vh; border-right: 1px solid #eee; padding: 20px;}
         .nav-item .active { border-left: 4px solid #4f46e5; background-color: #f5f3ff; color: #4f46e5 !important; border-radius: 4px; }
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            color: #6c757d !important;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        .logout-btn:hover {
+            background-color: #fff5f5;
+            color: #dc3545 !important;
+        }
         .btn-cyber { background: #4f46e5; color: white; border: none; font-weight: bold; transition: background-color 0.2s ease, transform 0.1s ease; }
         .btn-cyber:hover { background: #4338ca; color: white; }
         .text-cyber { color: #4f46e5 !important; }
@@ -95,7 +110,7 @@
             </div>
             <div class="mb-4">
                 <hr>
-                <a href="logout" class="nav-link text-secondary fw-bold"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+                <a href="logout" class="logout-btn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
             </div>
         </div>
         <div class="col-md-10 p-4 offset-md-2">
