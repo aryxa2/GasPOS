@@ -28,8 +28,13 @@ public class PenggunaController extends HttpServlet {
             response.sendRedirect("pos");
             return;
         }
-        List<Pengguna> listUser = userDAO.getAllPengguna();
-        request.setAttribute("listUser", listUser);
+        try {
+            List<Pengguna> listUser = userDAO.getAllPengguna();
+            request.setAttribute("listUser", listUser);
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Gagal mengambil data pengguna: " + e.getMessage());
+        }
         request.getRequestDispatcher("setting.jsp").forward(request, response);
     }
 
