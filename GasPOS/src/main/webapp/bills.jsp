@@ -68,7 +68,7 @@
                                         <td><%= dateStr %> WIB</td>
                                         <td><%= t.getPelanggan() %></td>
                                         <td><%= t.getItemsSold() %></td>
-                                        <td class="fw-bold text-emerald">Rp <%= String.format("%,.0f", t.getTotalBayar()).replace(",", ".") %></td>
+                                        <td class="fw-bold text-emerald">Rp <%= String.format(java.util.Locale.US, "%,.0f", t.getTotalBayar()) %></td>
                                     </tr>
                         <% 
                                 }

@@ -86,8 +86,8 @@
                                 <td class="ps-4 text-muted"><%= p.getIdProduk() %></td>
                                 <td class="fw-bold"><%= p.getNamaProduk() %></td>
                                 <td class="text-muted"><%= p.getKategori() %></td>
-                                <td>Rp <%= (int) p.getHargaModal() %></td>
-                                <td class="text-indigo fw-bold">Rp <%= (int) p.getHargaJual() %></td>
+                                <td>Rp <%= java.text.NumberFormat.getNumberInstance(java.util.Locale.US).format((int) p.getHargaModal()) %></td>
+                                <td class="text-indigo fw-bold">Rp <%= java.text.NumberFormat.getNumberInstance(java.util.Locale.US).format((int) p.getHargaJual()) %></td>
                                 <td><%= p.getStok() %></td>
                                 <td><span class="badge-aktif">Aktif</span></td>
                                 <td>

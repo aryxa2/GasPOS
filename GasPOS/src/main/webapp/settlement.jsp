@@ -226,7 +226,7 @@
                                             <tr>
                                                 <td class="fw-bold"><%= m.getNamaMenu() %></td>
                                                 <td class="text-center"><%= m.getQty() %></td>
-                                                <td class="text-end fw-bold text-emerald">Rp <%= nf.format(m.getTotal()).replace(",", ".") %></td>
+                                                <td class="text-end fw-bold text-emerald">Rp <%= nf.format(m.getTotal()) %></td>
                                             </tr>
                                 <% 
                                         }
@@ -247,11 +247,11 @@
                         <h6 class="text-muted fw-bold mb-4">RINGKASAN KEUANGAN</h6>
                         <div class="d-flex justify-content-between mb-3">
                             <span class="text-muted">Subtotal Penjualan</span>
-                            <span class="fw-bold" id="subtotalPenjualanText">Rp <%= nf.format(subtotalVal).replace(",", ".") %></span>
+                            <span class="fw-bold" id="subtotalPenjualanText">Rp <%= nf.format(subtotalVal) %></span>
                         </div>
                         <div class="d-flex justify-content-between mt-3">
                             <span class="text-cyber fw-bold fs-5">TOTAL PENDAPATAN</span>
-                            <span class="text-cyber fw-bold fs-5" id="totalPendapatanText">Rp <%= nf.format(revenueVal).replace(",", ".") %></span>
+                            <span class="text-cyber fw-bold fs-5" id="totalPendapatanText">Rp <%= nf.format(revenueVal) %></span>
                         </div>
                         <div class="mt-auto pt-4 d-flex gap-2">
                             <button id="btnTutupKasir" class="btn btn-danger w-50 fw-bold" data-bs-toggle="modal" data-bs-target="#confirmTutupModal">Tutup Kasir</button>

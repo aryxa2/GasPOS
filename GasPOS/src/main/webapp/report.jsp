@@ -125,19 +125,19 @@
                 <div class="col-md">
                     <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
                         <h6 class="text-muted fw-bold mb-3">TOTAL MODAL (HPP)</h6>
-                        <h3 class="text-warning fw-bold mb-0">Rp <%= nf.format(totalHpp).replace(",", ".") %></h3>
+                        <h3 class="text-warning fw-bold mb-0">Rp <%= nf.format(totalHpp) %></h3>
                     </div>
                 </div>
                 <div class="col-md">
                     <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
                         <h6 class="text-muted fw-bold mb-3">TOTAL PENJUALAN</h6>
-                        <h3 class="fw-bold mb-0">Rp <%= nf.format(totalRevenue).replace(",", ".") %></h3>
+                        <h3 class="fw-bold mb-0">Rp <%= nf.format(totalRevenue) %></h3>
                     </div>
                 </div>
                 <div class="col-md">
                     <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
                         <h6 class="text-muted fw-bold mb-3">LABA</h6>
-                        <h3 class="text-emerald fw-bold mb-0">Rp <%= nf.format(laba).replace(",", ".") %></h3>
+                        <h3 class="text-emerald fw-bold mb-0">Rp <%= nf.format(laba) %></h3>
                     </div>
                 </div>
             </div>
@@ -165,7 +165,7 @@
                                                 <td class="fw-bold"><%= t.getNoInvoice() %></td>
                                                 <td><%= dateStr %> WIB</td>
                                                 <td><%= t.getKasir() %></td>
-                                                <td class="fw-bold text-emerald">Rp <%= nf.format(t.getTotalBayar()).replace(",", ".") %></td>
+                                                <td class="fw-bold text-emerald">Rp <%= nf.format(t.getTotalBayar()) %></td>
                                             </tr>
                                 <% 
                                         }
@@ -200,7 +200,7 @@
                                             <tr>
                                                 <td class="fw-bold"><%= m.getNamaMenu() %></td>
                                                 <td class="text-center"><%= m.getQty() %></td>
-                                                <td class="text-end fw-bold text-emerald">Rp <%= nf.format(m.getTotal()).replace(",", ".") %></td>
+                                                <td class="text-end fw-bold text-emerald">Rp <%= nf.format(m.getTotal()) %></td>
                                             </tr>
                                 <% 
                                         }

@@ -361,7 +361,7 @@
                                   <div class="product-title">
                                     <%= p.getNamaProduk() %>
                                   </div>
-                                  <div class="product-price">Rp <%= (int) p.getHargaJual() %>
+                                  <div class="product-price">Rp <%= java.text.NumberFormat.getNumberInstance(java.util.Locale.US).format((int) p.getHargaJual()) %>
                                   </div>
                                 </div>
                                 <button class="btn btn-cyber"
@@ -446,7 +446,7 @@
                     "<div class='cart-card d-flex justify-content-between align-items-center'>" +
                     "<div>" +
                     "<div class='fw-bold text-dark'>" + item.nama + "</div>" +
-                    "<div class='text-success small'>Rp " + item.harga + "</div>" +
+                    " <div class='text-success small'>Rp " + Number(item.harga).toLocaleString('en-US') + "</div>" +
                     "</div>" +
                     "<div class='d-flex align-items-center gap-2'>" +
                     "<button class='btn btn-light border qty-btn' onclick=\"updateQty('" + item.id + "', -1)\">-</button>" +
@@ -458,8 +458,8 @@
                 });
               }
               document.getElementById("item-count").innerText = count + " item";
-              document.getElementById("subtotal-price").innerText = "Rp " + total;
-              document.getElementById("total-price").innerText = "Rp " + total;
+              document.getElementById("subtotal-price").innerText = "Rp " + total.toLocaleString('en-US');
+              document.getElementById("total-price").innerText = "Rp " + total.toLocaleString('en-US');
             }
 
             let currentTotal = 0;
@@ -484,7 +484,7 @@
               document.getElementById('inputWalletPhone').value = '';
 
               // Set total amount
-              document.getElementById('paymentTotalAmount').innerText = "Rp " + currentTotal.toLocaleString('id-ID');
+              document.getElementById('paymentTotalAmount').innerText = "Rp " + currentTotal.toLocaleString('en-US');
 
               // Select Cash by default
               document.getElementById('payTunai').checked = true;
@@ -509,10 +509,10 @@
               let cashReceived = parseFloat(document.getElementById('inputCashReceived').value) || 0;
               let change = cashReceived - currentTotal;
               if (change < 0) {
-                document.getElementById('textCashChange').innerText = "Kurang Rp " + Math.abs(change).toLocaleString('id-ID');
+                document.getElementById('textCashChange').innerText = "Kurang Rp " + Math.abs(change).toLocaleString('en-US');
                 document.getElementById('textCashChange').className = "fw-bold text-danger mb-0";
               } else {
-                document.getElementById('textCashChange').innerText = "Rp " + change.toLocaleString('id-ID');
+                document.getElementById('textCashChange').innerText = "Rp " + change.toLocaleString('en-US');
                 document.getElementById('textCashChange').className = "fw-bold text-success mb-0";
               }
             }
@@ -567,14 +567,14 @@
                   "<tr>" +
                   "<td>" + item.nama + "</td>" +
                   "<td class=\"text-center\">" + item.qty + "</td>" +
-                  "<td class=\"text-right\">" + item.harga.toLocaleString('id-ID') + "</td>" +
-                  "<td class=\"text-right\">" + (item.qty * item.harga).toLocaleString('id-ID') + "</td>" +
+                  "<td class=\"text-right\">" + item.harga.toLocaleString('en-US') + "</td>" +
+                  "<td class=\"text-right\">" + (item.qty * item.harga).toLocaleString('en-US') + "</td>" +
                   "</tr>";
               });
 
               document.getElementById('printReceiptQtyCount').innerText = totalQty;
-              document.getElementById('printReceiptSubtotal').innerText = currentTotal.toLocaleString('id-ID');
-              document.getElementById('printReceiptTotal').innerText = currentTotal.toLocaleString('id-ID');
+              document.getElementById('printReceiptSubtotal').innerText = currentTotal.toLocaleString('en-US');
+              document.getElementById('printReceiptTotal').innerText = currentTotal.toLocaleString('en-US');
 
               if (selectedMethod === 'Tunai') {
                 let cashReceived = parseFloat(document.getElementById('inputCashReceived').value) || 0;
@@ -585,14 +585,14 @@
                 }
                 let change = cashReceived - currentTotal;
                 document.getElementById('receiptCashRow').classList.remove('d-none');
-                document.getElementById('receiptCashPaid').innerText = "Rp " + cashReceived.toLocaleString('id-ID');
-                document.getElementById('receiptChange').innerText = "Rp " + change.toLocaleString('id-ID');
+                document.getElementById('receiptCashPaid').innerText = "Rp " + cashReceived.toLocaleString('en-US');
+                document.getElementById('receiptChange').innerText = "Rp " + change.toLocaleString('en-US');
 
                 // Tampilkan rincian kembalian di area cetak struk
                 document.getElementById('printReceiptCashRow').style.display = 'table-row';
                 document.getElementById('printReceiptChangeRow').style.display = 'table-row';
-                document.getElementById('printReceiptCashPaid').innerText = cashReceived.toLocaleString('id-ID');
-                document.getElementById('printReceiptChange').innerText = change.toLocaleString('id-ID');
+                document.getElementById('printReceiptCashPaid').innerText = cashReceived.toLocaleString('en-US');
+                document.getElementById('printReceiptChange').innerText = change.toLocaleString('en-US');
               } else {
                 // Sembunyikan rincian kembalian di area cetak struk
                 document.getElementById('printReceiptCashRow').style.display = 'none';
@@ -601,7 +601,7 @@
 
               // Tampilkan info di modal sukses
               document.getElementById('receiptMethod').innerText = selectedMethod;
-              document.getElementById('receiptTotal').innerText = "Rp " + currentTotal.toLocaleString('id-ID');
+              document.getElementById('receiptTotal').innerText = "Rp " + currentTotal.toLocaleString('en-US');
 
               // Kirim data transaksi ke server
               let params = new URLSearchParams();
