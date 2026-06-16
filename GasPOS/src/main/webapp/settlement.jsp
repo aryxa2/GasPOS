@@ -19,133 +19,30 @@
         .btn-emerald { background: #10b981; color: white; border: none; transition: background-color 0.2s ease, transform 0.1s ease; }
         .btn-emerald:hover { background: #059669; color: white; }
 
-        /* Area Cetak Laporan Settlement (Disembunyikan pada web) */
         #settlementPrintArea {
             display: none;
         }
 
         @media print {
-            html, body {
-                width: 100% !important;
-                height: auto !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                background-color: #fff !important;
-            }
-
-            /* Sembunyikan semua elemen web biasa */
+            /* Sembunyikan elemen web biasa */
             .container-fluid,
             .modal,
             .modal-backdrop,
             button {
                 display: none !important;
             }
+            
+            body {
+                background-color: #fff !important;
+            }
 
-            /* Tampilkan dan posisikan area cetak laporan */
+            /* Tampilkan area cetak laporan */
             #settlementPrintArea {
                 display: block !important;
-                width: 85% !important;
-                max-width: 650px !important;
-                margin: 40px auto !important;
-                padding: 30px !important;
-                font-family: 'Courier New', Courier, monospace;
-                font-size: 14px;
-                line-height: 1.6;
-                color: #000;
-                background-color: #fff !important;
-                border: 1px solid #000 !important;
-                border-radius: 6px !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 20px !important;
                 box-sizing: border-box !important;
-            }
-
-            #settlementPrintArea .report-header {
-                text-align: center;
-                margin-bottom: 20px;
-            }
-
-            #settlementPrintArea .logo {
-                font-size: 28px;
-                font-weight: bold;
-                letter-spacing: 4px;
-                margin: 0 0 8px 0;
-                text-transform: uppercase;
-                border-bottom: 2px solid #000;
-                display: inline-block;
-                padding-bottom: 4px;
-            }
-
-            #settlementPrintArea .store-details {
-                font-size: 13px;
-                line-height: 1.4;
-            }
-
-            #settlementPrintArea .store-details p {
-                margin: 2px 0;
-            }
-
-            #settlementPrintArea .report-title {
-                font-size: 18px;
-                font-weight: bold;
-                margin: 15px 0;
-                letter-spacing: 2px;
-            }
-
-            #settlementPrintArea .separator {
-                margin: 15px 0 !important;
-                height: 0;
-                border-top: none !important;
-                border-left: none !important;
-                border-right: none !important;
-            }
-
-            #settlementPrintArea .separator-double {
-                border-bottom: 3px double #000 !important;
-            }
-
-            #settlementPrintArea .separator-dashed {
-                border-bottom: 1px dashed #000 !important;
-            }
-
-            #settlementPrintArea table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-
-            #settlementPrintArea th {
-                font-weight: bold;
-                border-bottom: 1px dashed #000;
-                padding-bottom: 6px;
-                text-align: left;
-                font-size: 13px;
-            }
-
-            #settlementPrintArea td {
-                padding: 6px 0;
-                vertical-align: top;
-                font-size: 13px;
-            }
-
-            #settlementPrintArea .text-right {
-                text-align: right !important;
-            }
-
-            #settlementPrintArea .text-center {
-                text-align: center !important;
-            }
-
-            #settlementPrintArea .fw-bold {
-                font-weight: bold;
-            }
-
-            #settlementPrintArea .section-title {
-                font-size: 14px;
-                font-weight: bold;
-                margin: 15px 0 8px 0;
-                letter-spacing: 1px;
-            }
-
-            #settlementPrintArea .report-signatures {
-                margin-top: 50px;
             }
         }
     </style>
@@ -269,87 +166,97 @@
 
 <!-- Area Cetak Laporan Settlement (Hanya Muncul saat Diprint) -->
 <div id="settlementPrintArea">
-    <div class="report-header text-center">
-        <h1 class="logo">GasPOS</h1>
-        <div class="store-details">
-            <p>BOJONGSOANG 187</p>
-            <p>081294658263</p>
-            <p>LENGKONG, BOJONGSOANG</p>
-            <p>JL. RAYA BOJONGSOANG NO. 187 RT. 001 RW. 002</p>
+    <!-- Header Laporan -->
+    <div style="width: 100%; font-family: 'Times New Roman', Georgia, serif; line-height: 1.2;">
+        <!-- Logo -->
+        <div style="float: left; width: 35%;">
+            <h1 style="font-family: 'Times New Roman', Georgia, serif; font-size: 38px; font-weight: bold; margin: 0; color: #000; letter-spacing: 1px;">GasPOS</h1>
+            <p style="font-size: 11px; margin: 3px 0 0 0; font-style: italic; color: #333;">BOJONGSOANG 187 • LENGKONG</p>
         </div>
-        <div class="separator separator-double"></div>
-        <h3 class="report-title">LAPORAN SETTLEMENT KASIR</h3>
-        <div class="separator separator-dashed"></div>
+        
+        <!-- Judul Laporan -->
+        <div style="float: left; width: 40%; text-align: center; margin-top: 10px;">
+            <div style="border: 2px solid #000; padding: 6px 15px; display: inline-block; background-color: #fff; box-shadow: 4px 4px 0px #000; min-width: 250px;">
+                <h3 style="font-family: 'Times New Roman', Georgia, serif; font-size: 15px; font-weight: bold; margin: 0; text-transform: uppercase; letter-spacing: 1px;">Laporan Tutup Kasir</h3>
+            </div>
+            <p style="font-family: 'Times New Roman', Georgia, serif; font-size: 12px; margin: 8px 0 0 0; font-weight: bold; font-style: italic;">
+                (Settlement Kasir)
+            </p>
+        </div>
+        
+        <!-- Metadata -->
+        <div style="float: right; width: 25%; text-align: right; font-family: 'Times New Roman', Georgia, serif; font-size: 12px; margin-top: 5px;">
+            <p style="margin: 0; font-weight: bold;" id="printReportDateStr">-</p>
+            <p style="margin: 3px 0 0 0;" id="printReportTimeStr">-</p>
+            <p style="margin: 3px 0 0 0;">Page: 1</p>
+        </div>
+        <div style="clear: both; margin-bottom: 25px;"></div>
     </div>
 
-    <div class="report-info">
-        <table>
+    <!-- Info Tutup Kasir -->
+    <div style="border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 8px 0; margin-bottom: 25px;">
+        <table style="width: 100%; font-family: 'Times New Roman', Georgia, serif; font-size: 13px; border-collapse: collapse;">
             <tr>
-                <td>Tanggal Laporan :</td>
-                <td class="text-right fw-bold" id="printReportDate">04/06/2026</td>
-            </tr>
-            <tr>
-                <td>Status Kasir :</td>
-                <td class="text-right fw-bold text-success" id="printReportStatus">Kasir Dibuka</td>
-            </tr>
-            <tr>
-                <td>Total Transaksi Lunas :</td>
-                <td class="text-right fw-bold" id="printReportTotalTx">1</td>
+                <td style="width: 33%;"><strong>Tanggal Laporan:</strong> <span style="font-weight: normal;" id="printReportDate">04/06/2026</span></td>
+                <td style="width: 33%; text-align: center;"><strong>Status Kasir:</strong> <span style="font-weight: bold;" id="printReportStatus">Kasir Dibuka</span></td>
+                <td style="width: 34%; text-align: right;"><strong>Total Transaksi Lunas:</strong> <span style="font-weight: normal;" id="printReportTotalTx">0</span></td>
             </tr>
         </table>
-        <div class="separator separator-dashed"></div>
     </div>
 
-    <div class="report-items">
-        <h5 class="section-title">DETAIL MENU TERJUAL</h5>
-        <table>
+    <!-- Detail Menu Terjual -->
+    <div style="margin-bottom: 30px;">
+        <h4 style="font-family: 'Times New Roman', Georgia, serif; font-size: 14px; font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 3px; margin: 0 0 10px 0; text-transform: uppercase;">Detail Menu Terjual</h4>
+        <table style="width: 100%; border-collapse: collapse; font-family: 'Times New Roman', Georgia, serif; font-size: 12px;">
             <thead>
-                <tr>
-                    <th style="width: 50%;">Nama Menu</th>
-                    <th class="text-center" style="width: 15%;">Qty</th>
-                    <th class="text-right" style="width: 35%;">Total</th>
+                <tr style="font-weight: bold;">
+                    <th style="text-align: left; padding: 5px 0; width: 60%; border-bottom: 1px solid #000; text-decoration: underline;">Nama Menu</th>
+                    <th style="text-align: center; padding: 5px 0; width: 20%; border-bottom: 1px solid #000; text-decoration: underline;">Qty Terjual</th>
+                    <th style="text-align: right; padding: 5px 0; width: 20%; border-bottom: 1px solid #000; text-decoration: underline;">Total Penjualan</th>
                 </tr>
             </thead>
             <tbody id="printReportItemsBody">
                 <!-- Disalin dari tabel halaman utama via JS -->
             </tbody>
         </table>
-        <div class="separator separator-dashed"></div>
     </div>
 
-    <div class="report-totals">
-        <table>
+    <!-- Ringkasan Keuangan -->
+    <div style="margin-bottom: 40px; margin-top: 20px; font-family: 'Times New Roman', Georgia, serif; font-size: 13px;">
+        <div style="float: right; width: 45%; border-top: 1px solid #000; padding-top: 8px;">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="text-align: left; padding: 3px 0;">Subtotal Penjualan:</td>
+                    <td style="text-align: right; padding: 3px 0;" id="printReportSubtotal">Rp 0</td>
+                </tr>
+                <tr style="font-weight: bold; font-size: 14px; border-top: 1px dashed #000; border-bottom: 1px dashed #000;">
+                    <td style="padding: 6px 0; text-align: left;">TOTAL PENDAPATAN:</td>
+                    <td style="padding: 6px 0; text-align: right;" id="printReportTotalRevenue">Rp 0</td>
+                </tr>
+            </table>
+        </div>
+        <div style="clear: both;"></div>
+    </div>
+
+    <!-- Tanda Tangan Laporan -->
+    <div style="margin-top: 50px; font-family: 'Times New Roman', Georgia, serif; font-size: 13px;">
+        <table style="width: 100%;">
             <tr>
-                <td>Subtotal Penjualan</td>
-                <td class="text-right" id="printReportSubtotal">Rp 35.000</td>
-            </tr>
-            <tr style="font-weight: bold; border-top: 1px dashed #000; border-bottom: 1px dashed #000;">
-                <td style="padding: 8px 0;">TOTAL PENDAPATAN</td>
-                <td class="text-right" style="padding: 8px 0;" id="printReportTotalRevenue">Rp 35.000</td>
+                <td style="width: 50%; text-align: center;">
+                    <p style="margin: 0 0 60px 0;">Dipersiapkan Oleh (Kasir),</p>
+                    <p style="font-weight: bold; margin: 0;">( ____________________ )</p>
+                </td>
+                <td style="width: 50%; text-align: center;">
+                    <p style="margin: 0 0 60px 0;">Disetujui Oleh (Owner),</p>
+                    <p style="font-weight: bold; margin: 0;">( ____________________ )</p>
+                </td>
             </tr>
         </table>
     </div>
 
-    <div class="report-signatures">
-        <table style="width: 100%; margin-top: 50px;">
-            <tr>
-                <td style="width: 50%; text-align: center;">
-                    <p>Kasir,</p>
-                    <br><br><br>
-                    <p class="fw-bold">( ____________________ )</p>
-                </td>
-                <td style="width: 50%; text-align: center;">
-                    <p>Supervisor / Owner,</p>
-                    <br><br><br>
-                    <p class="fw-bold">( ____________________ )</p>
-                </td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="report-footer text-center" style="margin-top: 40px;">
-        <div class="separator separator-double"></div>
-        <p class="small text-muted" id="printReportTimestamp">Dicetak pada: -</p>
+    <!-- Footer Struk Laporan -->
+    <div style="margin-top: 60px; text-align: center; font-family: 'Times New Roman', Georgia, serif; font-size: 11px; font-style: italic; color: #333; border-top: 1px dashed #000; padding-top: 10px;">
+        <p style="margin: 0;" id="printReportTimestamp">Dicetak pada: -</p>
     </div>
 </div>
 
@@ -454,9 +361,9 @@
         
         // Ubah warna status di print area
         if (statusText.indexOf("Ditutup") !== -1) {
-            document.getElementById('printReportStatus').className = "text-right fw-bold text-danger";
+            document.getElementById('printReportStatus').style.color = "red";
         } else {
-            document.getElementById('printReportStatus').className = "text-right fw-bold text-success";
+            document.getElementById('printReportStatus').style.color = "green";
         }
         
         document.getElementById('printReportTotalTx').innerText = totalTx;
@@ -485,13 +392,29 @@
 
         // Waktu Cetak
         let now = new Date();
-        let formattedTime = now.getDate().toString().padStart(2, '0') + "-" + 
-                            (now.getMonth() + 1).toString().padStart(2, '0') + "-" + 
-                            now.getFullYear() + " " + 
-                            now.getHours().toString().padStart(2, '0') + ":" + 
-                            now.getMinutes().toString().padStart(2, '0') + ":" + 
-                            now.getSeconds().toString().padStart(2, '0');
-        document.getElementById('printReportTimestamp').innerText = "Dicetak pada: " + formattedTime;
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        let monthName = months[now.getMonth()];
+        let day = now.getDate();
+        let year = now.getFullYear();
+        let formattedDate = monthName + " " + day + ", " + year;
+        
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
+        let seconds = now.getSeconds();
+        let ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        let formattedTime2 = hours + ":" + minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0') + " " + ampm;
+        
+        document.getElementById('printReportDateStr').innerText = formattedDate;
+        document.getElementById('printReportTimeStr').innerText = formattedTime2;
+
+        let dayStr = day.toString().padStart(2, '0');
+        let monthStr = (now.getMonth() + 1).toString().padStart(2, '0');
+        let timeStr = now.getHours().toString().padStart(2, '0') + ":" + 
+                      now.getMinutes().toString().padStart(2, '0') + ":" + 
+                      now.getSeconds().toString().padStart(2, '0');
+        document.getElementById('printReportTimestamp').innerText = "Dicetak pada: " + dayStr + "-" + monthStr + "-" + year + " " + timeStr + " WIB";
 
         // Register event listener for logout after print if cashier closed
         if (shouldLogoutAfterPrint) {
