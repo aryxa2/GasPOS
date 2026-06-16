@@ -9,8 +9,8 @@ import java.util.List;
  * @author Arya Satriawansyah
  */
 public interface UserDAO {
-    User authenticate(String username, String password);
-    List<Pengguna> getAllPengguna();
-    boolean addPengguna(Pengguna pengguna);
-    boolean changeStatus(String username);
+    User authenticate(String username, String password) throws Exception;
+    List<Pengguna> getAllPengguna() throws Exception;
+    boolean addPengguna(Pengguna pengguna) throws Exception;
+    boolean changeStatus(String username) throws Exception;
 }

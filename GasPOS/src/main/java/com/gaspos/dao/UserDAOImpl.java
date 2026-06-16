@@ -19,7 +19,7 @@ import java.util.List;
 public class UserDAOImpl implements UserDAO {
 
     @Override
-    public User authenticate(String username, String password) {
+    public User authenticate(String username, String password) throws Exception {
         try (Connection conn = Database.getConnection()) {
             String sql = "SELECT * FROM pengguna WHERE username = ? AND password_hash = ? AND status = 'Aktif'";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -46,12 +46,13 @@ public class UserDAOImpl implements UserDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
         return null;
     }
 
     @Override
-    public List<Pengguna> getAllPengguna() {
+    public List<Pengguna> getAllPengguna() throws Exception {
         List<Pengguna> list = new ArrayList<>();
         try (Connection conn = Database.getConnection()) {
             String sql = "SELECT * FROM pengguna";
@@ -68,12 +69,13 @@ public class UserDAOImpl implements UserDAO {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
         return list;
     }
 
     @Override
-    public boolean addPengguna(Pengguna pengguna) {
+    public boolean addPengguna(Pengguna pengguna) throws Exception {
         try (Connection conn = Database.getConnection()) {
             String sql = "INSERT INTO pengguna (username, nama, password_hash, role, status) VALUES (?, ?, ?, ?, 'Aktif')";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -84,12 +86,12 @@ public class UserDAOImpl implements UserDAO {
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            throw e;
         }
     }
 
     @Override
-    public boolean changeStatus(String username) {
+    public boolean changeStatus(String username) throws Exception {
         try (Connection conn = Database.getConnection()) {
             String sql = "UPDATE pengguna SET status = IF(status='Aktif', 'Nonaktif', 'Aktif') WHERE username = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -97,7 +99,7 @@ public class UserDAOImpl implements UserDAO {
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            throw e;
         }
     }
 }
