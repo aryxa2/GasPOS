@@ -17,25 +17,31 @@
         .text-cyber { color: #4f46e5 !important; }
         .text-emerald { color: #10b981 !important; }
 
+        #reportPrintArea {
+            display: none;
+        }
+
         @media print {
-            .sidebar, form, .btn {
+            /* Sembunyikan elemen web biasa */
+            .container-fluid,
+            .modal,
+            .modal-backdrop,
+            button,
+            form {
                 display: none !important;
             }
-            .col-md-10 {
-                width: 100% !important;
-                margin-left: 0 !important;
-                padding: 0 !important;
-            }
-            .offset-md-2 {
-                margin-left: 0 !important;
-            }
+            
             body {
                 background-color: #fff !important;
-                font-size: 12px;
             }
-            .card {
-                box-shadow: none !important;
-                border: 1px solid #ddd !important;
+
+            /* Tampilkan area cetak laporan */
+            #reportPrintArea {
+                display: block !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 20px !important;
+                box-sizing: border-box !important;
             }
         }
     </style>
@@ -220,5 +226,185 @@
         </div>
     </div>
 </div>
+
+<!-- Area Cetak Laporan Profesional (Hanya Muncul saat Diprint) -->
+<div id="reportPrintArea">
+    <!-- Header Laporan -->
+    <div style="width: 100%; font-family: 'Times New Roman', Georgia, serif; line-height: 1.2;">
+        <!-- Logo -->
+        <div style="float: left; width: 35%;">
+            <h1 style="font-family: 'Times New Roman', Georgia, serif; font-size: 38px; font-weight: bold; margin: 0; color: #000; letter-spacing: 1px;">GasPOS</h1>
+            <p style="font-size: 11px; margin: 3px 0 0 0; font-style: italic; color: #333;">Premium Point of Sales System</p>
+        </div>
+        
+        <!-- Judul Laporan -->
+        <div style="float: left; width: 40%; text-align: center; margin-top: 10px;">
+            <div style="border: 2px solid #000; padding: 6px 15px; display: inline-block; background-color: #fff; box-shadow: 4px 4px 0px #000; min-width: 250px;">
+                <h3 style="font-family: 'Times New Roman', Georgia, serif; font-size: 16px; font-weight: bold; margin: 0; text-transform: uppercase; letter-spacing: 1px;">Laporan Penjualan Detail</h3>
+            </div>
+            <p style="font-family: 'Times New Roman', Georgia, serif; font-size: 12px; margin: 8px 0 0 0; font-weight: bold;">
+                Periode: <%= "semua".equals(range) ? "Semua Transaksi" : range + " Hari Terakhir" %>
+            </p>
+        </div>
+        
+        <!-- Metadata -->
+        <div style="float: right; width: 25%; text-align: right; font-family: 'Times New Roman', Georgia, serif; font-size: 12px; margin-top: 5px;">
+            <p style="margin: 0; font-weight: bold;" id="printReportDateStr">-</p>
+            <p style="margin: 3px 0 0 0;" id="printReportTimeStr">-</p>
+            <p style="margin: 3px 0 0 0;">Page: 1</p>
+        </div>
+        <div style="clear: both; margin-bottom: 25px;"></div>
+    </div>
+
+    <!-- Ringkasan Keuangan -->
+    <div style="border-top: 2px solid #000; border-bottom: 2px solid #000; padding: 8px 0; margin-bottom: 25px;">
+        <table style="width: 100%; font-family: 'Times New Roman', Georgia, serif; font-size: 13px; border-collapse: collapse;">
+            <tr>
+                <td style="width: 20%;"><strong>Total Transaksi:</strong> <span style="font-weight: normal;"><%= totalTx %></span></td>
+                <td style="width: 25%;"><strong>Produk Terjual:</strong> <span style="font-weight: normal;"><%= totalQty %> Unit</span></td>
+                <td style="width: 25%;"><strong>Total HPP:</strong> <span style="font-weight: normal;">Rp <%= nf.format(totalHpp) %></span></td>
+                <td style="width: 30%; text-align: right;"><strong>Laba Bersih:</strong> <span style="font-weight: bold;">Rp <%= nf.format(laba) %></span></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Tabel 1: Detail Transaksi Per Kasir -->
+    <div style="margin-bottom: 30px;">
+        <h4 style="font-family: 'Times New Roman', Georgia, serif; font-size: 14px; font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 3px; margin: 0 0 10px 0; text-transform: uppercase;">Detail Transaksi Per Kasir</h4>
+        <table style="width: 100%; border-collapse: collapse; font-family: 'Times New Roman', Georgia, serif; font-size: 12px;">
+            <thead>
+                <tr style="font-weight: bold;">
+                    <th style="text-align: left; padding: 5px 0; width: 15%; border-bottom: 1px solid #000; text-decoration: underline;">Kasir</th>
+                    <th style="text-align: left; padding: 5px 0; width: 25%; border-bottom: 1px solid #000; text-decoration: underline;">No. Invoice</th>
+                    <th style="text-align: left; padding: 5px 0; width: 20%; border-bottom: 1px solid #000; text-decoration: underline;">Pelanggan</th>
+                    <th style="text-align: left; padding: 5px 0; width: 15%; border-bottom: 1px solid #000; text-decoration: underline;">Metode</th>
+                    <th style="text-align: left; padding: 5px 0; width: 13%; border-bottom: 1px solid #000; text-decoration: underline;">Waktu</th>
+                    <th style="text-align: right; padding: 5px 0; width: 12%; border-bottom: 1px solid #000; text-decoration: underline;">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% 
+                    if (listTrans != null && !listTrans.isEmpty()) {
+                        String currentKasir = "";
+                        for (Transaksi t : listTrans) {
+                            java.text.SimpleDateFormat sdfPrint = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm");
+                            String dateStr = t.getTanggal() != null ? sdfPrint.format(t.getTanggal()) : "-";
+                            
+                            boolean showKasirHeader = !t.getKasir().equals(currentKasir);
+                            if (showKasirHeader) {
+                                currentKasir = t.getKasir();
+                            }
+                %>
+                            <tr>
+                                <td style="padding: 5px 0; font-weight: bold; vertical-align: top;"><%= showKasirHeader ? currentKasir : "" %></td>
+                                <td style="padding: 5px 0; vertical-align: top;"><%= t.getNoInvoice() %></td>
+                                <td style="padding: 5px 0; vertical-align: top;"><%= t.getPelanggan() %></td>
+                                <td style="padding: 5px 0; vertical-align: top;"><%= t.getMetodePembayaran() %></td>
+                                <td style="padding: 5px 0; vertical-align: top;"><%= dateStr %></td>
+                                <td style="padding: 5px 0; text-align: right; vertical-align: top;">Rp <%= nf.format(t.getTotalBayar()) %></td>
+                            </tr>
+                <% 
+                        }
+                    } else {
+                %>
+                        <tr>
+                            <td colspan="6" style="padding: 12px 0; text-align: center; font-style: italic; color: #444;">Belum ada transaksi</td>
+                        </tr>
+                <% 
+                    }
+                %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Tabel 2: Ringkasan Menu Terjual -->
+    <div style="margin-bottom: 40px;">
+        <h4 style="font-family: 'Times New Roman', Georgia, serif; font-size: 14px; font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 3px; margin: 0 0 10px 0; text-transform: uppercase;">Ringkasan Menu Terjual</h4>
+        <table style="width: 100%; border-collapse: collapse; font-family: 'Times New Roman', Georgia, serif; font-size: 12px;">
+            <thead>
+                <tr style="font-weight: bold;">
+                    <th style="text-align: left; padding: 5px 0; width: 60%; border-bottom: 1px solid #000; text-decoration: underline;">Nama Menu</th>
+                    <th style="text-align: center; padding: 5px 0; width: 20%; border-bottom: 1px solid #000; text-decoration: underline;">Qty Terjual</th>
+                    <th style="text-align: right; padding: 5px 0; width: 20%; border-bottom: 1px solid #000; text-decoration: underline;">Total Penjualan</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% 
+                    if (listMenu != null && !listMenu.isEmpty()) {
+                        for (MenuTerjual m : listMenu) {
+                %>
+                            <tr>
+                                <td style="padding: 5px 0;"><%= m.getNamaMenu() %></td>
+                                <td style="padding: 5px 0; text-align: center;"><%= m.getQty() %></td>
+                                <td style="padding: 5px 0; text-align: right;">Rp <%= nf.format(m.getTotal()) %></td>
+                            </tr>
+                <% 
+                        }
+                    } else {
+                %>
+                        <tr>
+                            <td colspan="3" style="padding: 12px 0; text-align: center; font-style: italic; color: #444;">Belum ada menu terjual</td>
+                        </tr>
+                <% 
+                    }
+                %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Tanda Tangan Laporan -->
+    <div style="margin-top: 50px; font-family: 'Times New Roman', Georgia, serif; font-size: 13px;">
+        <table style="width: 100%;">
+            <tr>
+                <td style="width: 50%; text-align: center;">
+                    <p style="margin: 0 0 60px 0;">Dipersiapkan Oleh,</p>
+                    <p style="font-weight: bold; margin: 0;">( ____________________ )</p>
+                    <p style="margin: 5px 0 0 0; font-size: 11px; font-style: italic; color: #333;">Admin Kasir</p>
+                </td>
+                <td style="width: 50%; text-align: center;">
+                    <p style="margin: 0 0 60px 0;">Disetujui Oleh,</p>
+                    <p style="font-weight: bold; margin: 0;">( ____________________ )</p>
+                    <p style="margin: 5px 0 0 0; font-size: 11px; font-style: italic; color: #333;">Supervisor / Owner</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Footer Struk Laporan -->
+    <div style="margin-top: 60px; text-align: center; font-family: 'Times New Roman', Georgia, serif; font-size: 11px; font-style: italic; color: #333; border-top: 1px dashed #000; padding-top: 10px;">
+        <p style="margin: 0;" id="printReportTimestampStr"></p>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        let now = new Date();
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        
+        let monthName = months[now.getMonth()];
+        let day = now.getDate();
+        let year = now.getFullYear();
+        let formattedDate = monthName + " " + day + ", " + year;
+        
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
+        let seconds = now.getSeconds();
+        let ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // 0 should be 12
+        let formattedTime = hours + ":" + minutes.toString().padStart(2, '0') + ":" + seconds.toString().padStart(2, '0') + " " + ampm;
+        
+        document.getElementById('printReportDateStr').innerText = formattedDate;
+        document.getElementById('printReportTimeStr').innerText = formattedTime;
+        
+        // Timestamp at the bottom
+        let dayStr = day.toString().padStart(2, '0');
+        let monthStr = (now.getMonth() + 1).toString().padStart(2, '0');
+        let timeStr = now.getHours().toString().padStart(2, '0') + ":" + 
+                      now.getMinutes().toString().padStart(2, '0') + ":" + 
+                      now.getSeconds().toString().padStart(2, '0');
+        document.getElementById('printReportTimestampStr').innerText = "Dicetak pada: " + dayStr + "-" + monthStr + "-" + year + " " + timeStr + " WIB";
+    });
+</script>
 </body>
 </html>
